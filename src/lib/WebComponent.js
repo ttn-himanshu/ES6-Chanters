@@ -8,18 +8,31 @@ export default class WebComponent {
     this.proto = proto;
     this.initializeComponent();
     this.beginWork();
-    // console.log("proto/state", this.proto);
   }
 
   beginWork = () => {
     const { customElement, proto } = this;
-    this.walkNodes(customElement.shadowRoot, (node) => {
+    walkNodes(customElement.shadowRoot, (node) => {
+      // if (
+      //   this.repeaterNode &&
+      //   this.ifParentIsAReapeater(this.repeaterNode, node)
+      // ) {
+      //   return;
+      // }
+
       /**
        * Get all the binding in a node
        * @textBinding @attributeBinding - like @events, @id(ref)
        */
       const nodeObject = new Getters(node, customElement, proto);
 
+      if (node.repeater) {
+        this.repeaterNode = node;
+        // node.parentCustomElemnt = customElement;
+        // node.nodeObject = nodeObject;
+      }
+
+      node.setAttribute && node.setAttribute("processed", "yes");
       /**
        * Set all the bindings in a node
        * @textBinding @attributeBinding - like @events, @id(ref)
@@ -30,21 +43,26 @@ export default class WebComponent {
     });
   };
 
+  ifParentIsAReapeater = (parent, child) => {
+    if (parent.contains(child)) return true;
+    return false;
+  };
+
   /**
    *  Recursive loop for html node
    *  node parser
    **/
-  walkNodes = (node, callback) => {
-    if (node.childNodes.length > 0) {
-      let child = node.firstChild;
-      while (child) {
-        if (callback && typeof callback === "function") callback(child);
+  // walkNodes = (node, callback) => {
+  //   if (node.childNodes.length > 0) {
+  //     let child = node.firstChild;
+  //     while (child) {
+  //       if (callback && typeof callback === "function") callback(child);
 
-        this.walkNodes(child, callback);
-        child = child.nextSibling;
-      }
-    }
-  };
+  //       this.walkNodes(child, callback);
+  //       child = child.nextSibling;
+  //     }
+  //   }
+  // };
 
   initializeComponent = () => {
     const { customElement, proto } = this;
@@ -55,3 +73,15 @@ export default class WebComponent {
       });
   };
 }
+
+export const walkNodes = (node, callback) => {
+  if (node.childNodes.length > 0) {
+    let child = node.firstChild;
+    while (child) {
+      if (callback && typeof callback === "function") callback(child);
+
+      walkNodes(child, callback);
+      child = child.nextSibling;
+    }
+  }
+};

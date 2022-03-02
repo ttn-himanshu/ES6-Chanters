@@ -4,16 +4,22 @@
 <head>
     <meta charset="utf-8" />
     <title>Homepage</title>
-    <script type="module" src="src/lib/ChantersHeader.js"></script>
+    <script type="module" src="src/web-components/header/index.js"></script>
+    <script type="module" src="src/web-components/background/index.js"></script>
+    <script type="module" src="src/web-components/content/index.js"></script>
+    <!-- <script type="module" src="src/lib/template-repeat.js"></script> -->
+
+
 </head>
 
 <body>
     <chanters-header data-number="1">
     </chanters-header>
-    <!-- <chanters-header id="2">
-    </chanters-header>
-    <chanters-header id="3">
-    </chanters-header> -->
+    <chanters-background class="container"></chanters-background>
+    <chanters-content chanters-contextmenu="openmenu" data-template="chanters-login.html">
+        <chanters-menu data-visibility="hide" data-callback="menuItemClicked">
+        </chanters-menu>
+    </chanters-content>
 </body>
 
 </html>

@@ -4,6 +4,8 @@ import {
   getValuesFromKeys,
   createBindingObject,
   attributeIterator,
+  html,
+  setBindingVariables,
 } from "./utils.js";
 import { ChantersConstants } from "./Chanter_schema.js";
 
@@ -48,10 +50,13 @@ export default class Getters {
    * Create binding object for text nodes
    */
   __GetterTextNodes__() {
-    const { node } = this;
-    const keys = getBindingVariables(node.textContent);
+    const { node, nodeObject } = this;
+    let keys = getBindingVariables(node.textContent);
 
     if (!keys) return;
+
+    if (node.processedNode)
+      keys = this.handleRepeaterKeys(keys, node, nodeObject, "textContent");
 
     this.__CreateTextBindingObject__(keys);
   }
@@ -62,20 +67,53 @@ export default class Getters {
     const { node, customElement, proto, nodeObject } = this;
 
     // setting reference to node inside webcomponent
-    if (node.id) webComponent.$[node.id] = node;
+    if (node.id) customElement.$[node.id] = node;
 
-    attributeIterator(node, proto, nodeObject, customElement, (attr, keys) => {
-      let bindingObject = this.__getAttributeSchema__(attr.name);
-      bindingObject.values = getValuesFromKeys(keys, proto, customElement);
+    attributeIterator(
+      node,
+      proto,
+      nodeObject,
+      customElement,
+      (attr, keys, isRepeater) => {
+        /**
+         * handling for repeaters, now custom element
+         * template repeat will handle by template repeat
+         * first custome element of the library
+         */
+        if (isRepeater) {
+          node.repeater = true;
+          this.__CreateRepeater__Object(attr);
+          return;
+        }
 
-      bindingObject =
-        bindingObject.bindingType === "Attribute"
-          ? this.__CreateAttributeObject__(attr, keys, bindingObject)
-          : this.__CreateEventObject__(attr, keys, bindingObject);
+        let bindingObject = this.__getAttributeSchema__(attr.name);
+        bindingObject.values = getValuesFromKeys(keys, proto, customElement);
 
-      createBindingObject(nodeObject, bindingObject);
-    });
+        bindingObject =
+          bindingObject.bindingType === "Attribute"
+            ? this.__CreateAttributeObject__(attr, keys, bindingObject)
+            : this.__CreateEventObject__(attr, keys, bindingObject);
+
+        createBindingObject(nodeObject, bindingObject);
+      }
+    );
   }
+
+  __CreateRepeater__Object(attr) {
+    const { proto, node, nodeObject, customElement } = this;
+    const bindingObject = ChantersConstants("repeaterObject").parsingLevel;
+    bindingObject.raw = attr.nodeValue;
+    bindingObject.targetKey = attr.nodeName;
+    bindingObject.targetArray = proto[attr.nodeValue];
+    bindingObject.proto = proto;
+    bindingObject.template = node;
+    bindingObject.templateClone = html([node.innerHTML]);
+    bindingObject.parentCustomElemnt = customElement;
+    bindingObject.nextSibling = node.nextSibling;
+    bindingObject.parentNode = node.parentNode;
+    createBindingObject(nodeObject, bindingObject);
+  }
+
   __CreateEventObject__(attr, keys, bindingObject, eventType) {
     const { node, nodeObject, customElement, proto } = this;
     let eventName = eventType || attr.name.split("on-")[1];
@@ -113,5 +151,29 @@ export default class Getters {
     bindingObject.values = getValuesFromKeys(keys, proto);
 
     createBindingObject(nodeObject, bindingObject);
+  }
+
+  handleRepeaterKeys(keys, node, nodeObject, type, attr) {
+    var _from = keys;
+    var _with = [];
+    let _keys = [];
+    var iteratorKey = node.iteratorKey;
+
+    _with = keys.map((item) => {
+      item = item.replace("item", iteratorKey);
+      _keys.push(item);
+      return "{{" + item + "}}";
+    });
+
+    if (type === "textContent")
+      node.textContent = setBindingVariables(node.textContent, _from, _with);
+    else if (type === "attribute") {
+      node.setAttribute(
+        attr.name,
+        setBindingVariables(attr.value, _from, _with)
+      );
+    }
+
+    return _keys;
   }
 }

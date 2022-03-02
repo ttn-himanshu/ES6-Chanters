@@ -15,6 +15,12 @@ export default class Chanters extends HTMLElement {
   init = () => {
     this.attachShadowRoot();
     const webComponent = new WebComponent(this, this.constructor.properties);
+    if (
+      webComponent.customElement.onReady &&
+      typeof webComponent.customElement.onReady === "function"
+    ) {
+      webComponent.customElement.onReady();
+    }
   };
 
   /**

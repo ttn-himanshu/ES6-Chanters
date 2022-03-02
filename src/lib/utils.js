@@ -106,7 +106,7 @@ export const getValuesFromKeys = (keys, proto, customElement) => {
 };
 
 const byString = (proto, str, customElement) => {
-  let prototype;
+  let prototype = {...proto};
   str = str.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
   str = str.replace(/^\./, ""); // strip a leading dot
   const nthStr = str.split(".");
@@ -114,8 +114,8 @@ const byString = (proto, str, customElement) => {
   for (var i = 0, n = nthStr.length; i < n; ++i) {
     var k = nthStr[i];
 
-    if (k in proto) {
-      prototype = proto[k];
+    if (k in prototype) {
+      prototype = prototype[k];
     } else if (k in customElement) {
       prototype = customElement[k];
     } else {
@@ -147,8 +147,12 @@ export const attributeIterator = (
   forLoop(node.attributes, function (index, attr) {
     if (attr.value.indexOf("{{") !== -1) {
       const _keys = getBindingVariables(attr.value);
-       
+
       if (isFunction(callback) && keys(_keys).length) callback(attr, _keys);
+    } else if (attr.name === "items" && node.nodeName === "TEMPLATE") {
+      // todo add below check in above if conditoin
+      // && node.nodeName === "template-repeat"
+      if (isFunction(callback)) callback(attr, null, true);
     }
   });
 };
