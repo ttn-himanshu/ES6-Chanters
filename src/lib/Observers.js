@@ -72,7 +72,19 @@ export default class Observers {
       const { node, bindingObject } = item;
 
       if (bindingObject.Attribute) {
-        this.__ObserveAttibuteChanges__(change, bindingObject.Attribute, node);
+        this.__ObserveChanges__(
+          change,
+          bindingObject.Attribute,
+          node,
+          "Attribute"
+        );
+      } else if (bindingObject.TextContent) {
+        this.__ObserveChanges__(
+          change,
+          bindingObject.TextContent,
+          node,
+          "TextContent"
+        );
       }
     });
   }
@@ -91,7 +103,7 @@ export default class Observers {
     }
   }
 
-  __ObserveAttibuteChanges__(change, bindingObject, node) {
+  __ObserveChanges__(change, bindingObject, node, changeType) {
     const { webComponent, prototypeClone } = this;
 
     bindingObject.forEach(function (item) {
@@ -101,13 +113,11 @@ export default class Observers {
         key = key.split(".").pop();
         if (key === effectedPropertyName) item.values[index] = change.newValue;
       });
-
-      // Setters.prototype.__Setter__Attribute(node, item);
     });
 
     new Setters(
       node,
-      { Attribute: bindingObject },
+      { [changeType]: bindingObject },
       webComponent,
       prototypeClone
     );
