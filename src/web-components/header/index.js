@@ -23,8 +23,8 @@ class ChantersHeader extends Chanters {
       <div
         id="header"
         class="header btm-border dark-div fixed-top z-index-pinnacle"
-      >{{primary}}
-        <label on-click="{{handleClick}}">Chanters</label>
+      >
+        <label on-click="{{handleClick}}" name="{{firstProperty}}">{{firstProperty}}</label>
         <div id="logo" class="border">
           <canvas id="analyser"></canvas>
         </div>
@@ -39,7 +39,7 @@ class ChantersHeader extends Chanters {
 
   static get properties() {
     return {
-      firstProperty: "values",
+      firstProperty: "click me",
       item: "custom element",
       primary: "btn-primary",
       default: "btn-size-default",
@@ -52,6 +52,8 @@ class ChantersHeader extends Chanters {
   }
 
   handleClick() {
+    // todo start from here
+    this.firstProperty = "sfsdfdsf";
     console.log("onclick function executed", this);
   }
 }

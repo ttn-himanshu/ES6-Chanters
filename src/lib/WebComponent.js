@@ -1,6 +1,7 @@
 import { forLoop, keys } from "./utils.js";
 import Getters from "./Getters.js";
 import Setters from "./Setters.js";
+import Observers from "./Observers.js";
 
 export default class WebComponent {
   constructor(customElement, proto) {
@@ -12,25 +13,15 @@ export default class WebComponent {
 
   beginWork = () => {
     const { customElement, proto } = this;
-    walkNodes(customElement.shadowRoot, (node) => {
-      // if (
-      //   this.repeaterNode &&
-      //   this.ifParentIsAReapeater(this.repeaterNode, node)
-      // ) {
-      //   return;
-      // }
+    var observer = new Observers(customElement, proto);
+    customElement.templateInstance = new Object();
 
+    walkNodes(customElement.shadowRoot, (node) => {
       /**
        * Get all the binding in a node
        * @textBinding @attributeBinding - like @events, @id(ref)
        */
       const nodeObject = new Getters(node, customElement, proto);
-
-      if (node.repeater) {
-        this.repeaterNode = node;
-        // node.parentCustomElemnt = customElement;
-        // node.nodeObject = nodeObject;
-      }
 
       node.setAttribute && node.setAttribute("processed", "yes");
       /**
@@ -39,6 +30,7 @@ export default class WebComponent {
        */
       if (keys(nodeObject).length) {
         new Setters(node, nodeObject, customElement, proto);
+        observer.__observe__(node, nodeObject);
       }
     });
   };
@@ -47,22 +39,6 @@ export default class WebComponent {
     if (parent.contains(child)) return true;
     return false;
   };
-
-  /**
-   *  Recursive loop for html node
-   *  node parser
-   **/
-  // walkNodes = (node, callback) => {
-  //   if (node.childNodes.length > 0) {
-  //     let child = node.firstChild;
-  //     while (child) {
-  //       if (callback && typeof callback === "function") callback(child);
-
-  //       this.walkNodes(child, callback);
-  //       child = child.nextSibling;
-  //     }
-  //   }
-  // };
 
   initializeComponent = () => {
     const { customElement, proto } = this;
@@ -74,6 +50,10 @@ export default class WebComponent {
   };
 }
 
+/**
+ *  Recursive loop for html node
+ *  node parser
+ **/
 export const walkNodes = (node, callback) => {
   if (node.childNodes.length > 0) {
     let child = node.firstChild;

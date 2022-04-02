@@ -96,17 +96,24 @@ export const setBindingVariables = (
  * values from custom element prototype
  **/
 
-export const getValuesFromKeys = (keys, proto, customElement) => {
+export const getValuesFromKeys = (
+  keys,
+  proto,
+  customElement,
+  node,
+  nodeObject
+) => {
   var values = [];
 
   forLoop(keys, function (key, i) {
-    values.push(byString(proto, key, customElement));
+    values.push(byString(proto, key, customElement, node, nodeObject));
   });
   return values;
 };
 
-const byString = (proto, str, customElement) => {
-  let prototype = {...proto};
+const byString = (proto, str, customElement, node, nodeObject) => {
+  const { templateInstance } = customElement;
+  let prototype = { ...proto };
   str = str.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
   str = str.replace(/^\./, ""); // strip a leading dot
   const nthStr = str.split(".");
@@ -116,6 +123,7 @@ const byString = (proto, str, customElement) => {
 
     if (k in prototype) {
       prototype = prototype[k];
+      mapNodes(node, nodeObject, templateInstance, k);
     } else if (k in customElement) {
       prototype = customElement[k];
     } else {
@@ -124,6 +132,17 @@ const byString = (proto, str, customElement) => {
   }
 
   return prototype;
+};
+
+const mapNodes = (n, bindingObject, templateInstance, key) => {
+  if (!templateInstance[key]) {
+    templateInstance[key] = [];
+  }
+
+  templateInstance[key].push({
+    node: n,
+    bindingObject: bindingObject,
+  });
 };
 
 // creates bindingObject from Getters class
@@ -155,4 +174,8 @@ export const attributeIterator = (
       if (isFunction(callback)) callback(attr, null, true);
     }
   });
+};
+
+export const cloneObject = (obj) => {
+  if (isObject(obj)) return JSON.parse(JSON.stringify(obj));
 };

@@ -87,7 +87,13 @@ export default class Getters {
         }
 
         let bindingObject = this.__getAttributeSchema__(attr.name);
-        bindingObject.values = getValuesFromKeys(keys, proto, customElement);
+        bindingObject.values = getValuesFromKeys(
+          keys,
+          proto,
+          customElement,
+          node,
+          nodeObject
+        );
 
         bindingObject =
           bindingObject.bindingType === "Attribute"
@@ -143,12 +149,12 @@ export default class Getters {
   }
 
   __CreateTextBindingObject__(keys) {
-    const { node, proto, nodeObject } = this;
+    const { node, proto, nodeObject, customElement } = this;
     const bindingObject = ChantersConstants("TextObect");
 
     bindingObject.keys = keys;
     bindingObject.raw = node.textContent.trim();
-    bindingObject.values = getValuesFromKeys(keys, proto);
+    bindingObject.values = getValuesFromKeys(keys, proto, customElement, node, nodeObject);
 
     createBindingObject(nodeObject, bindingObject);
   }
