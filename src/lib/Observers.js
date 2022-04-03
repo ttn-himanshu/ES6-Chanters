@@ -20,7 +20,6 @@ export default class Observers {
 
   cloneWebCompnent() {
     let { webComponent, prototype } = this;
-
     this.prototypeClone = cloneObject(prototype);
 
     forLoop(prototype, (key) => {
@@ -90,10 +89,9 @@ export default class Observers {
    * @param {} key
    */
   defineProperty(key) {
-    const { prototype, webComponent } = this;
-
+    const { webComponent } = this;
     const that = this;
-    const targetObject = getObject(prototype, key);
+    const targetObject = getObject(webComponent, key);
     const keyClone = key.split(".").pop();
     const targetClone = cloneObject(targetObject);
 

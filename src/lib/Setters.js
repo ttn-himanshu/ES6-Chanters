@@ -72,7 +72,7 @@ export default class Setters {
   }
 
   __Setter__Events(bindingObject) {
-    const { node, proto } = this;
+    const { node, proto, customElement } = this;
 
     node.addEventListener(
       bindingObject.eventName,
@@ -81,8 +81,7 @@ export default class Setters {
         let arr = [event];
         // if (bindingObject.arguments && bindingObject.arguments.length)
         //   arr = arr.concat(bindingObject.arguments);
-
-        bindingObject.functionBody.apply(proto, arr);
+        bindingObject.functionBody.apply(customElement, arr);
         event.preventDefault();
       },
       true

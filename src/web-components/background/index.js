@@ -19,21 +19,9 @@ class ChantersBackground extends Chanters {
             min-width: 100%;
             min-height: 100%;
         }
-
-        #backgroundContainer div {
-            position: relative;
-            width: 94%;
-            margin: 0 auto;
-            color: white;
-        }
       </style>
       <chanters-notification id="notification" data-right="0" data-bottom="0" data-visibility="hide" data-message="Loading..."></chanters-notification>
         <img id="background" class="{{zIndex}}" src="{{backgroundImg}}">
-        <section id="backgroundContainer" class="fixed-top z-index-pinnacle" style="display: none;top:50px">
-            <div class="">
-                <directory-structure></directory-structure>
-            </div>
-        </section>
       </div>
     `;
   }

@@ -24,20 +24,9 @@ class ChantersHeader extends Chanters {
         id="header"
         class="header btm-border dark-div fixed-top z-index-pinnacle"
       >
-        <label on-click="{{handleClick}}" name="{{firstProperty}}"
-          >{{firstProperty}}</label
-        >
         <div id="logo" class="border">
           <canvas id="analyser"></canvas>
         </div>
-        <ul>
-          <template repeat items="emplyeeList">
-            <li>{{item.name}}</li>
-          </template>
-        </ul>
-        <span>{{deepObject.user.name}}</span>
-        <input type="text" value="{{deepObject.user.name}}"/>
-        <span>{{deepObject.user.name}}</span>
       </div>
     `;
   }
@@ -59,14 +48,6 @@ class ChantersHeader extends Chanters {
         },
       },
     };
-  }
-
-  handleClick() {
-    // todo start from here
-    this.firstProperty = "sfsdfdsf";
-    this.emplyeeList[0].name = "himanshu adhikari";
-    this.deepObject.user.name = "input binding changed"
-    console.log("onclick function executed", this);
   }
 }
 

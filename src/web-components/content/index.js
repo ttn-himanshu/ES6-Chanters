@@ -22,7 +22,7 @@ class ChantersContent extends Chanters {
       </style>
       <div class="z-index-center" id="view">
         <wrapper class="{{visibility}}">
-          <content select="*"></content>
+          <chanters-login></chanters-login>
         </wrapper>
       </div>
     `;

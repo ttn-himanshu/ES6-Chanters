@@ -46,8 +46,8 @@ export const forLoop = (arr, callback) => {
       if (arr[i] && typeof callback === "function") callback(arr[i], i);
     }
   else if (isObject(arr))
-    Object.keys(arr).forEach(function (key, index, object) {
-      if (arr[key] && typeof callback === "function")
+    Object.keys(arr).forEach(function (key, index) {
+      if (typeof callback === "function")
         callback(key, arr[key], index);
     });
 };
