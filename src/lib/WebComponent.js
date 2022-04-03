@@ -30,7 +30,7 @@ export default class WebComponent {
        */
       if (keys(nodeObject).length) {
         new Setters(node, nodeObject, customElement, proto);
-        observer.__observe__(node, nodeObject);
+        observer.observe(node, nodeObject);
       }
     });
   };

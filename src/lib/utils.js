@@ -3,6 +3,12 @@ export const isArray = Array.isArray;
 export const isFunction = (value) => {
   return typeof value === "function";
 };
+export const isNumber = (value) => {
+  return typeof value === "number";
+};
+export const isString = (value) => {
+  return typeof value === "string";
+};
 
 /**
  * To check if a node contains text content or not

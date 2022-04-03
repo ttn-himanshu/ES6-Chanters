@@ -33,6 +33,9 @@ class ChantersHeader extends Chanters {
             <li>{{item.name}}</li>
           </template>
         </ul>
+        <span>{{firstProperty}}</span>
+        <span>{{deepObject.user.name}}</span>
+
       </div>
     `;
   }
@@ -48,6 +51,11 @@ class ChantersHeader extends Chanters {
         { name: "kiran", age: 36 },
         { name: "ivu", age: 3 },
       ],
+      deepObject: {
+        user: {
+          name: "Himanshu"
+        }
+      }
     };
   }
 

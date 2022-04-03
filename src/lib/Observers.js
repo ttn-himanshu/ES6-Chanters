@@ -1,4 +1,11 @@
-import { cloneObject, isFunction, forLoop } from "./utils.js";
+import {
+  cloneObject,
+  isFunction,
+  forLoop,
+  isNumber,
+  isString,
+  isObject,
+} from "./utils.js";
 import Setters from "./Setters.js";
 
 export default class Observers {
@@ -7,10 +14,10 @@ export default class Observers {
     this.prototype = proto;
     this.prototypeClone = {};
     this.webComponent = customElement;
-    this.__cloneWebCompnent__(customElement);
+    this.cloneWebCompnent(customElement);
   }
 
-  __cloneWebCompnent__() {
+  cloneWebCompnent() {
     let { webComponent, prototype } = this;
 
     this.prototypeClone = cloneObject(prototype);
@@ -25,44 +32,99 @@ export default class Observers {
     });
   }
 
-  __observe__(node, nodeObject) {
-    if (nodeObject.Attribute) {
-      nodeObject.Attribute.forEach((item) => {
-        const { keys } = item;
+  checkValuesFromKeys(o, s, mapper) {
+    s = s.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
+    s = s.replace(/^\./, ""); // strip a leading dot
+    var a = s.split(".");
 
-        keys.forEach((key) => {
-          this.__defineProperty__(key);
-        });
-      });
+    for (var i = 0, n = a.length; i < n; ++i) {
+      var k = a[i];
+
+      if (k in o) {
+        if (mapper[k] && i === a.length - 1) return false;
+
+        if (isString(o[k]) || isNumber(o[k]) || typeof o[k] === "boolean")
+          mapper[k] = true;
+
+        if (isObject(o[k])) {
+          if (!mapper[k]) mapper[k] = {};
+
+          mapper = mapper[k];
+        }
+
+        o = o[k];
+      } else {
+        return;
+      }
     }
+
+    return true;
+  }
+
+  observe(node, nodeObject) {
+    if (nodeObject.Attribute) {
+      this.createMappings(nodeObject, "Attribute");
+    } else if (nodeObject.TextContent) {
+      this.createMappings(nodeObject, "TextContent");
+    }
+  }
+
+  createMappings(nodeObject, observeType) {
+    nodeObject[observeType].forEach((item) => {
+      const { keys } = item;
+
+      keys.forEach((key) => {
+        var check = this.checkValuesFromKeys(
+          this.webComponent,
+          key,
+          this.mapper
+        );
+        if (check) this.defineProperty(key);
+      });
+    });
+  }
+
+  getObject(prototype, keys) {
+    let splitKeys = keys.split(".");
+
+    for (let i = 0; i < splitKeys.length; i++) {
+      const key = splitKeys[i];
+      if (key in prototype && typeof prototype[key] === "object") {
+        prototype = prototype[key];
+      }
+    }
+    return prototype;
   }
 
   /**
    * function to handle two way data binding
    * @param {} key
    */
-  __defineProperty__(key) {
+  defineProperty(key) {
     const { prototypeClone, prototype, webComponent } = this;
 
     const that = this;
-
-    Object.defineProperty(prototype, key, {
+    const targetObject = this.getObject(prototype, key);
+    key = key.split(".").pop();
+    const targetClone = cloneObject(targetObject)
+   
+    Object.defineProperty(targetObject, key, {
       get: function () {
-        return prototypeClone[key];
+        return targetClone[key];
       },
       set: function (val) {
-        var change = that.__apply__(prototypeClone, key, val);
+        var change = that.apply(prototypeClone, key, val);
         if (!change) return;
 
         change.templateInstance = webComponent.templateInstance[key];
         prototypeClone[key] = val;
-        that.__digest__(change);
+        that.digest(change);
       },
       enumerable: true,
     });
   }
 
-  __digest__(change) {
+  digest(change) {
     if (!change.templateInstance) {
       console("unable to process digest for the change object", change);
       return;
@@ -72,14 +134,9 @@ export default class Observers {
       const { node, bindingObject } = item;
 
       if (bindingObject.Attribute) {
-        this.__ObserveChanges__(
-          change,
-          bindingObject.Attribute,
-          node,
-          "Attribute"
-        );
+        this.ObserveChanges(change, bindingObject.Attribute, node, "Attribute");
       } else if (bindingObject.TextContent) {
-        this.__ObserveChanges__(
+        this.ObserveChanges(
           change,
           bindingObject.TextContent,
           node,
@@ -89,7 +146,7 @@ export default class Observers {
     });
   }
 
-  __apply__(clone, key, value) {
+  apply(clone, key, value) {
     var newValue = value;
     var oldValue = clone[key];
 
@@ -103,7 +160,7 @@ export default class Observers {
     }
   }
 
-  __ObserveChanges__(change, bindingObject, node, changeType) {
+  ObserveChanges(change, bindingObject, node, changeType) {
     const { webComponent, prototypeClone } = this;
 
     bindingObject.forEach(function (item) {
