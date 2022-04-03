@@ -69,6 +69,8 @@ export default class Getters {
     // setting reference to node inside webcomponent
     if (node.id) customElement.$[node.id] = node;
 
+    // if (node.nodeName === "INPUT" ){debugger}
+
     attributeIterator(
       node,
       proto,

@@ -110,14 +110,14 @@ export default class Observers {
    
     Object.defineProperty(targetObject, keyClone, {
       get: function () {
-        return targetClone[key];
+        return targetClone[keyClone];
       },
       set: function (val) {
         var change = that.apply(targetClone, keyClone, val);
         if (!change) return;
 
         change.templateInstance = webComponent.templateInstance[key];
-        targetClone[key] = val;
+        targetClone[keyClone] = val;
         that.digest(change);
       },
       enumerable: true,

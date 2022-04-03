@@ -13,7 +13,7 @@ export default class Setters {
 
   beginWork() {
     const { nodeObject } = this;
-
+    // console.log(this.node, nodeObject)
     forLoop(nodeObject, (bindingType, item) => {
       if (isArray(item)) {
         forLoop(item, (bindingObject) => {
