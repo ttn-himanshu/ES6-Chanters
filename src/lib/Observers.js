@@ -161,6 +161,10 @@ export default class Observers {
       });
     });
 
+    if (node.nodeName === "INPUT") {
+      node.value = change.newValue;
+    }
+
     new Setters(
       node,
       { [changeType]: bindingObject },
