@@ -67,6 +67,7 @@ export default class Getters {
     var key = getBindingVariables(node.value)[0];
     if (key) {
       var attr = getAttributeByName("value", node);
+
       let bindingObject = ChantersConstants("EventObject");
       bindingObject.values = [inputCallback];
       bindingObject = this.__CreateEventObject__(
@@ -81,7 +82,7 @@ export default class Getters {
       function inputCallback(event) {
         webComponent.target = event.target;
         const key = bindingObject.scopeVariable;
-        const obj = getObject(prototype, key);
+        const obj = getObject(webComponent, key);
         obj[key.split(".").pop()] = node.value;
       }
     }
@@ -96,7 +97,7 @@ export default class Getters {
     // setting reference to node inside webcomponent
     if (node.id) customElement.$[node.id] = node;
 
-    if (node.nodeName === "INPUT") {
+    if (node.nodeName === "INPUT" && node.value.indexOf("{{") !== -1) {
       this.__GetterInput__(node, proto, nodeObject, customElement);
     }
 

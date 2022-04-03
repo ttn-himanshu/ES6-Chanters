@@ -43,10 +43,25 @@ export default class WebComponent {
   initializeComponent = () => {
     const { customElement, proto } = this;
     customElement.$ = {};
-    if (keys(customElement.dataset).length)
-      forLoop(customElement.dataset, function (key, value) {
-        proto[key] = value;
+
+    /**
+     * handling props
+     */
+    if (keys(customElement.dataset).length) {
+      customElement.props = {};
+      forLoop(customElement.dataset, (key, value) => {
+        customElement.props[key] = this.getProps(customElement, value);
       });
+    }
+  };
+
+  getProps = (customElement, value) => {
+    const parentComponent = customElement.getRootNode().host;
+    if (parentComponent && parentComponent[value]) {
+      return parentComponent[value];
+    } else {
+      return value;
+    }
   };
 }
 

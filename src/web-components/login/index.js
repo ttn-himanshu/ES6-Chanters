@@ -27,7 +27,6 @@ class ChantersLogin extends Chanters {
             <input
               type="email"
               value="{{email}}"
-              on-keyup="{{login}}"
               autofocus
               class="form-text email"
               placeholder="Email address"
@@ -37,7 +36,6 @@ class ChantersLogin extends Chanters {
             <input
               type="text"
               value="{{userName}}"
-              on-keyup="{{login}}"
               placeholder="User Name"
               class="form-text password"
             />
@@ -70,6 +68,7 @@ class ChantersLogin extends Chanters {
     ) {
       localStorage.userName = this.userName;
       localStorage.email = this.email;
+      this.props.onloginsuccess();
     } else {
       this.$.login.classList.add("loginFalse");
 

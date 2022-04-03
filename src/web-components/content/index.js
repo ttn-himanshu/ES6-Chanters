@@ -9,6 +9,7 @@ class ChantersContent extends Chanters {
 
         :host {
           position: relative;
+          height: 100vh;
         }
 
         #view {
@@ -22,7 +23,11 @@ class ChantersContent extends Chanters {
       </style>
       <div class="z-index-center" id="view">
         <wrapper class="{{visibility}}">
-          <chanters-login></chanters-login>
+          <chanters-login
+            class="{{isLoggedIn}}"
+            data-onloginsuccess="loginHandler"
+          ></chanters-login>
+          <chanters-menu id="menu"> </chanters-menu>
         </wrapper>
       </div>
     `;
@@ -30,8 +35,36 @@ class ChantersContent extends Chanters {
 
   static get properties() {
     return {
-        visibility: "show",
+      visibility: "show",
+      isLoggedIn: "show",
     };
+  }
+
+  onReady() {
+    this.isLoggedIn = this.isAuthanticate() ? "hide" : "show";
+
+    document.body.addEventListener("contextmenu", function (event) {
+      return false;
+    });
+
+    this.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      this.setPosition(event);
+      this.$.menu.visibility = "show";
+    });
+  }
+
+  setPosition(e) {
+    this.$.menu.$.menu.style.left = e.pageX + "px";
+    this.$.menu.$.menu.style.top = e.pageY - 70 + "px";
+  }
+
+  loginHandler() {
+    console.log("loginHandler called");
+  }
+  isAuthanticate() {
+    if (localStorage.userName && localStorage.email) return true;
+    else return false;
   }
 }
 

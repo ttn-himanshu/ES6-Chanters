@@ -6,22 +6,22 @@ class ChantersBackground extends Chanters {
     return html`
       <style>
         @import "src/style/chanters.css";
-         :host {
-            overflow: hidden;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        :host {
+          overflow: hidden;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
         }
 
         img {
-            min-width: 100%;
-            min-height: 100%;
+          min-width: 100%;
+          min-height: 100%;
         }
       </style>
-      <chanters-notification id="notification" data-right="0" data-bottom="0" data-visibility="hide" data-message="Loading..."></chanters-notification>
-        <img id="background" class="{{zIndex}}" src="{{backgroundImg}}">
+      <div>
+        <img id="background" class="{{zIndex}}" src="{{backgroundImg}}" />
       </div>
     `;
   }
