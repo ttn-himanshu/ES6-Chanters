@@ -6,6 +6,8 @@ import {
   attributeIterator,
   html,
   setBindingVariables,
+  getAttributeByName,
+  getObject,
 } from "./utils.js";
 import { ChantersConstants } from "./Chanter_schema.js";
 
@@ -60,6 +62,31 @@ export default class Getters {
 
     this.__CreateTextBindingObject__(keys);
   }
+
+  __GetterInput__(node, prototype, nodeObject, webComponent) {
+    var key = getBindingVariables(node.value)[0];
+    if (key) {
+      var attr = getAttributeByName("value", node);
+      let bindingObject = ChantersConstants("EventObject");
+      bindingObject.values = [inputCallback];
+      bindingObject = this.__CreateEventObject__(
+        attr[0],
+        key,
+        bindingObject,
+        "input"
+      );
+
+      createBindingObject(nodeObject, bindingObject);
+
+      function inputCallback(event) {
+        webComponent.target = event.target;
+        const key = bindingObject.scopeVariable;
+        const obj = getObject(prototype, key);
+        obj[key.split(".").pop()] = node.value;
+      }
+    }
+  }
+
   /**
    * Create binding object for attributes
    */
@@ -69,7 +96,9 @@ export default class Getters {
     // setting reference to node inside webcomponent
     if (node.id) customElement.$[node.id] = node;
 
-    // if (node.nodeName === "INPUT" ){debugger}
+    if (node.nodeName === "INPUT") {
+      this.__GetterInput__(node, proto, nodeObject, customElement);
+    }
 
     attributeIterator(
       node,
@@ -156,7 +185,13 @@ export default class Getters {
 
     bindingObject.keys = keys;
     bindingObject.raw = node.textContent.trim();
-    bindingObject.values = getValuesFromKeys(keys, proto, customElement, node, nodeObject);
+    bindingObject.values = getValuesFromKeys(
+      keys,
+      proto,
+      customElement,
+      node,
+      nodeObject
+    );
 
     createBindingObject(nodeObject, bindingObject);
   }

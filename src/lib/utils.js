@@ -71,6 +71,14 @@ export const getBindingVariables = (str) => {
       });
 };
 
+export const getAttributeByName = (attrName, n) => {
+  return Array.prototype.slice.call(n.attributes).filter(function(attr) {
+      if (attrName === attr.name)
+          return attr;
+  });
+}
+
+
 /**
  * function to set binding variables
  **/
@@ -82,7 +90,7 @@ export const setBindingVariables = (
 ) => {
   var str = textContent;
   for (var i = 0; i < from.length; i++) {
-    if (With[i]) {
+    if (With[i] !== undefined) {
       // if try to print object
       if (isObject(With[i])) With[i] = JSON.stringify(With[i]);
 
@@ -186,4 +194,17 @@ export const attributeIterator = (
 
 export const cloneObject = (obj) => {
   if (isObject(obj)) return JSON.parse(JSON.stringify(obj));
+};
+
+
+export const getObject = (prototype, keys) => {
+  let splitKeys = keys.split(".");
+
+  for (let i = 0; i < splitKeys.length; i++) {
+    const key = splitKeys[i];
+    if (key in prototype && typeof prototype[key] === "object") {
+      prototype = prototype[key];
+    }
+  }
+  return prototype;
 };

@@ -5,6 +5,7 @@ import {
   isNumber,
   isString,
   isObject,
+  getObject,
 } from "./utils.js";
 import Setters from "./Setters.js";
 
@@ -84,18 +85,6 @@ export default class Observers {
     });
   }
 
-  getObject(prototype, keys) {
-    let splitKeys = keys.split(".");
-
-    for (let i = 0; i < splitKeys.length; i++) {
-      const key = splitKeys[i];
-      if (key in prototype && typeof prototype[key] === "object") {
-        prototype = prototype[key];
-      }
-    }
-    return prototype;
-  }
-
   /**
    * function to handle two way data binding
    * @param {} key
@@ -104,10 +93,10 @@ export default class Observers {
     const { prototype, webComponent } = this;
 
     const that = this;
-    const targetObject = this.getObject(prototype, key);
+    const targetObject = getObject(prototype, key);
     const keyClone = key.split(".").pop();
-    const targetClone = cloneObject(targetObject)
-   
+    const targetClone = cloneObject(targetObject);
+
     Object.defineProperty(targetObject, keyClone, {
       get: function () {
         return targetClone[keyClone];
