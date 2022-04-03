@@ -24,7 +24,9 @@ class ChantersHeader extends Chanters {
         id="header"
         class="header btm-border dark-div fixed-top z-index-pinnacle"
       >
-        <label on-click="{{handleClick}}" name="{{firstProperty}}">{{firstProperty}}</label>
+        <label on-click="{{handleClick}}" name="{{firstProperty}}"
+          >{{firstProperty}}</label
+        >
         <div id="logo" class="border">
           <canvas id="analyser"></canvas>
         </div>
@@ -35,7 +37,6 @@ class ChantersHeader extends Chanters {
         </ul>
         <span>{{firstProperty}}</span>
         <span>{{deepObject.user.name}}</span>
-
       </div>
     `;
   }
@@ -53,9 +54,9 @@ class ChantersHeader extends Chanters {
       ],
       deepObject: {
         user: {
-          name: "Himanshu"
-        }
-      }
+          name: "Himanshu",
+        },
+      },
     };
   }
 
@@ -63,6 +64,7 @@ class ChantersHeader extends Chanters {
     // todo start from here
     this.firstProperty = "sfsdfdsf";
     console.log("onclick function executed", this);
+    this.emplyeeList[0].name = "himanshu adhikari";
   }
 }
 

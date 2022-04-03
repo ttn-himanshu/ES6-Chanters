@@ -128,8 +128,10 @@ const byString = (proto, str, customElement, node, nodeObject) => {
     var k = nthStr[i];
 
     if (k in prototype) {
+      if ((isString(prototype[k]) || isNumber(prototype[k])) && nodeObject) {
+        mapNodes(node, nodeObject, templateInstance, str);
+      }
       prototype = prototype[k];
-      mapNodes(node, nodeObject, templateInstance, k);
     } else if (k in customElement) {
       prototype = customElement[k];
     } else {
@@ -140,12 +142,12 @@ const byString = (proto, str, customElement, node, nodeObject) => {
   return prototype;
 };
 
-const mapNodes = (n, bindingObject, templateInstance, key) => {
-  if (!templateInstance[key]) {
-    templateInstance[key] = [];
+const mapNodes = (n, bindingObject, templateInstance, str) => {
+  if (!templateInstance[str]) {
+    templateInstance[str] = [];
   }
 
-  templateInstance[key].push({
+  templateInstance[str].push({
     node: n,
     bindingObject: bindingObject,
   });

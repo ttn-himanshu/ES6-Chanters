@@ -101,23 +101,23 @@ export default class Observers {
    * @param {} key
    */
   defineProperty(key) {
-    const { prototypeClone, prototype, webComponent } = this;
+    const { prototype, webComponent } = this;
 
     const that = this;
     const targetObject = this.getObject(prototype, key);
-    key = key.split(".").pop();
+    const keyClone = key.split(".").pop();
     const targetClone = cloneObject(targetObject)
    
-    Object.defineProperty(targetObject, key, {
+    Object.defineProperty(targetObject, keyClone, {
       get: function () {
         return targetClone[key];
       },
       set: function (val) {
-        var change = that.apply(prototypeClone, key, val);
+        var change = that.apply(targetClone, keyClone, val);
         if (!change) return;
 
         change.templateInstance = webComponent.templateInstance[key];
-        prototypeClone[key] = val;
+        targetClone[key] = val;
         that.digest(change);
       },
       enumerable: true,
@@ -126,7 +126,7 @@ export default class Observers {
 
   digest(change) {
     if (!change.templateInstance) {
-      console("unable to process digest for the change object", change);
+      console.error("unable to process digest for the change object", change);
       return;
     }
 
