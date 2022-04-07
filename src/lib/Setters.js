@@ -1,12 +1,14 @@
-import { forLoop, isArray, setBindingVariables } from "./utils.js";
+import { forLoop, isArray, setBindingVariables, keys } from "./utils.js";
 import { walkNodes } from "./WebComponent.js";
+import Getters from "./Getters.js";
 export default class Setters {
   constructor(...props) {
-    const [node, nodeObject, customElement, proto] = props;
+    const [node, nodeObject, customElement, proto, observer] = props;
     this.node = node;
     this.nodeObject = nodeObject;
     this.customElement = customElement;
     this.proto = proto;
+    this.observer = observer;
 
     this.beginWork();
   }
@@ -36,16 +38,63 @@ export default class Setters {
     });
   }
 
+  setRepeaterBoundary(bindingObject, type) {
+    const { template, raw } = bindingObject;
+    if (template) {
+      const comment = document.createComment(`${type} of array ${raw}`);
+      bindingObject.parentNode.insertBefore(comment, bindingObject.nextSibling);
+      bindingObject[type] = comment;
+    }
+  }
+
   __Setter__Repeaters(bindingObject) {
-    forLoop(bindingObject.targetArray, function (item, index) {
+    this.setRepeaterBoundary(bindingObject, "start");
+    this.executeRepeaters(bindingObject);
+    this.setRepeaterBoundary(bindingObject, "end");
+    bindingObject.nextSibling = bindingObject.end;
+
+    /**
+     * Observing array changes
+     */
+    bindingObject.targetArray = this.observer.observeArray(
+      bindingObject,
+      this.executeRepeaters.bind(this)
+    );
+
+    this.customElement[bindingObject.raw] = bindingObject.targetArray;
+  }
+
+  /**
+   *  below mthod executes on load and
+   *  after array length changes
+   */
+  executeRepeaters(bindingObject, reParsing) {
+    if (reParsing) {
+      this.cleanUp(bindingObject);
+    }
+    forLoop(bindingObject.targetArray, (item, index) => {
       const { templateClone } = bindingObject;
 
       var instance = document.importNode(templateClone.content, true);
 
-      (function (instance) {
-        walkNodes(instance, function (n) {
-          n.processedNode = true;
-          n.iteratorKey = bindingObject.raw + "." + index;
+      ((instance) => {
+        walkNodes(instance, (node) => {
+          node.processedNode = true;
+          node.iteratorKey = bindingObject.raw + "." + index;
+          if (reParsing) {
+            console.log(node, node.iteratorKey);
+            const nodeObject = new Getters(
+              node,
+              this.customElement,
+              this.proto
+            );
+            if (keys(nodeObject).length) {
+              this.nodeObject = nodeObject;
+              this.node = node;
+              this.beginWork();
+              this.observer.observe(node, nodeObject);
+            }
+          }
         });
 
         bindingObject.parentNode.insertBefore(
@@ -54,7 +103,40 @@ export default class Setters {
         );
       })(instance);
     });
-    // WebComponent.templateObject = bindingObject;
+  }
+
+  cleanUp(bindingObject) {
+    const { parentNode, start, end } = bindingObject;
+    let canDelete = false;
+
+    /**
+     * removing repeaters previously created node
+     */
+    var prev;
+    for (var child = parentNode.lastChild; child; child = prev) {
+      prev = child.previousSibling;
+      if (child === end) {
+        canDelete = true;
+        continue;
+      }
+      if (child === start) {
+        canDelete = false;
+      }
+      if (canDelete) {
+        parentNode.removeChild(child);
+      }
+    }
+
+    /**
+     * Cleaning up custom element's
+     * template instance.
+     */
+
+    for (let key in this.customElement.templateInstance) {
+      if (key.startsWith(bindingObject.raw + ".")) {
+        delete this.customElement.templateInstance[key];
+      }
+    }
   }
 
   __Setter__Attribute(bindingObject) {

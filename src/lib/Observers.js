@@ -25,11 +25,6 @@ export default class Observers {
     forLoop(prototype, (key) => {
       webComponent[key] = prototype[key];
     });
-
-    forLoop(this.prototypeClone, (key) => {
-      if (isFunction(this.prototypeClone[key]))
-        webComponent[key] = this.prototypeClone[key];
-    });
   }
 
   checkValuesFromKeys(o, s, mapper) {
@@ -110,6 +105,33 @@ export default class Observers {
       enumerable: true,
     });
   }
+
+  observeArray(bindingObject, executeRepeaters) {
+    const { targetArray } = bindingObject;
+    const that = this;
+
+    // a proxy for our array
+    var proxy = new Proxy(targetArray, {
+      apply: function (target, thisArg, argumentsList) {
+        return thisArg[target].apply(this, argumentsList);
+      },
+      deleteProperty: function (target, index) {
+        // console.log("Deleted %s", index);
+        return true;
+      },
+      set: function (target, property, value, receiver) {
+        // console.log("Set %s to %o", property, value, targetArray);
+        target[property] = value;
+        if (property==="length") {
+          executeRepeaters(bindingObject, true);
+        }
+        return true;
+      },
+    });
+    window.abc = proxy;
+    return proxy;
+  }
+
 
   digest(change) {
     if (!change.templateInstance) {

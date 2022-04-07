@@ -29,7 +29,7 @@ export default class WebComponent {
        * @textBinding @attributeBinding - like @events, @id(ref)
        */
       if (keys(nodeObject).length) {
-        new Setters(node, nodeObject, customElement, proto);
+        new Setters(node, nodeObject, customElement, proto, observer);
         observer.observe(node, nodeObject);
       }
     });
