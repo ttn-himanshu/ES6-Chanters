@@ -42,7 +42,6 @@ class TodoApp extends Chanters {
                     <span class="close" on-click="{{removeItem(itemsIndex)}}">x</span>
                 </li>
             </template>
-            <div>{{task.length}}</div>
         </ul>
       </div>
     `;

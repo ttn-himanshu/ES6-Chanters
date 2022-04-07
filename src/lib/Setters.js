@@ -86,6 +86,8 @@ export default class Setters {
       ((instance) => {
         walkNodes(instance, (node) => {
           node.processedNode = true;
+          node.setAttribute && node.setAttribute("processed", "yes");
+
           node.iteratorKey = bindingObject.raw + "." + index;
           if (reParsing) {
             const nodeObject = new Getters(
