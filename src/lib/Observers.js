@@ -1,11 +1,8 @@
 import {
   cloneObject,
-  isFunction,
   forLoop,
-  isNumber,
-  isString,
-  isObject,
   getObject,
+  checkValuesFromKeys,
 } from "./utils.js";
 import Setters from "./Setters.js";
 
@@ -27,35 +24,6 @@ export default class Observers {
     });
   }
 
-  checkValuesFromKeys(o, s, mapper) {
-    s = s.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
-    s = s.replace(/^\./, ""); // strip a leading dot
-    var a = s.split(".");
-
-    for (var i = 0, n = a.length; i < n; ++i) {
-      var k = a[i];
-
-      if (k in o) {
-        if (mapper[k] && i === a.length - 1) return false;
-
-        if (isString(o[k]) || isNumber(o[k]) || typeof o[k] === "boolean")
-          mapper[k] = true;
-
-        if (isObject(o[k])) {
-          if (!mapper[k]) mapper[k] = {};
-
-          mapper = mapper[k];
-        }
-
-        o = o[k];
-      } else {
-        return;
-      }
-    }
-
-    return true;
-  }
-
   observe(node, nodeObject) {
     if (nodeObject.Attribute) {
       this.createMappings(nodeObject, "Attribute");
@@ -69,7 +37,7 @@ export default class Observers {
       const { keys } = item;
 
       keys.forEach((key) => {
-        var check = this.checkValuesFromKeys(
+        var check = checkValuesFromKeys(
           this.webComponent,
           key,
           this.mapper

@@ -1,4 +1,10 @@
-import { forLoop, isArray, setBindingVariables, keys } from "./utils.js";
+import {
+  forLoop,
+  isArray,
+  setBindingVariables,
+  keys,
+  getFunctionParameters,
+} from "./utils.js";
 import { walkNodes } from "./WebComponent.js";
 import Getters from "./Getters.js";
 export default class Setters {
@@ -153,7 +159,7 @@ export default class Setters {
   }
 
   __Setter__Events(bindingObject) {
-    const { node, proto, customElement } = this;
+    const { node, customElement } = this;
 
     node.addEventListener(
       bindingObject.eventName,
@@ -161,8 +167,16 @@ export default class Setters {
         try {
           event.stopPropagation();
           let arr = [event];
-          // if (bindingObject.arguments && bindingObject.arguments.length)
-          //   arr = arr.concat(bindingObject.arguments);
+
+          if (bindingObject.arguments && bindingObject.arguments.length)
+            arr = arr.concat(
+              getFunctionParameters(
+                bindingObject.arguments,
+                node.iteratorKey,
+                customElement
+              )
+            );
+
           bindingObject.functionBody.apply(customElement, arr);
           event.preventDefault();
         } catch (error) {

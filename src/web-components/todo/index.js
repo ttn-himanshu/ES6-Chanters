@@ -19,8 +19,8 @@ class TodoApp extends Chanters {
     }
   }
 
-  removeItem(item) {
-    console.log(item)
+  removeItem(event, index) {
+    this.task.splice(index, 1);
   }
 
   static get template() {
@@ -39,7 +39,7 @@ class TodoApp extends Chanters {
             <template repeat items="task">
                 <li>
                     <span class="todo-name">{{item.name}}</span>
-                    <span class="close" on-click="{{removeItem(item, task)}}">x</span>
+                    <span class="close" on-click="{{removeItem(itemsIndex)}}">x</span>
                 </li>
             </template>
             <div>{{task.length}}</div>

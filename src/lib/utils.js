@@ -199,12 +199,12 @@ export const cloneObject = (obj) => {
   if (isObject(obj)) return JSON.parse(JSON.stringify(obj));
 };
 
-export const getObject = (prototype, keys) => {
+export const getObject = (prototype, keys, force) => {
   let splitKeys = keys.split(".");
 
   for (let i = 0; i < splitKeys.length; i++) {
     const key = splitKeys[i];
-    if (key in prototype && typeof prototype[key] === "object") {
+    if ((key in prototype && typeof prototype[key] === "object") || force) {
       prototype = prototype[key];
     }
   }
@@ -219,4 +219,52 @@ export const getFunctionArguments = (str) => {
   }
 
   return args[0];
+};
+
+export const checkValuesFromKeys = (o, s, mapper) => {
+  s = s.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
+  s = s.replace(/^\./, ""); // strip a leading dot
+  var a = s.split(".");
+
+  for (var i = 0, n = a.length; i < n; ++i) {
+    var k = a[i];
+
+    if (k in o) {
+      if (mapper[k] && i === a.length - 1) return false;
+
+      if (isString(o[k]) || isNumber(o[k]) || typeof o[k] === "boolean")
+        mapper[k] = true;
+
+      if (isObject(o[k])) {
+        if (!mapper[k]) mapper[k] = {};
+
+        mapper = mapper[k];
+      }
+
+      o = o[k];
+    } else {
+      return;
+    }
+  }
+
+  return true;
+};
+
+export const getFunctionParameters = (
+  parameters,
+  iteratorKey,
+  customElement
+) => {
+  const arr = [];
+  parameters.forEach((param) => {
+    if (param === "item" && iteratorKey) {
+      param = iteratorKey;
+    }
+    if (param === "itemsIndex" && iteratorKey) {
+      arr.push(iteratorKey.split(".").pop());
+    } else {
+      arr.push(getObject(customElement, param, true));
+    }
+  });
+  return arr;
 };
