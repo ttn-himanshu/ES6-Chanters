@@ -14,8 +14,13 @@ class TodoApp extends Chanters {
   }
 
   handleSubmit() {
-    this.task.push({ name: this.todoName });
-    console.log(this.task);
+    if (this.todoName) {
+      this.task.push({ name: this.todoName });
+    }
+  }
+
+  removeItem(item) {
+    console.log(item)
   }
 
   static get template() {
@@ -32,12 +37,12 @@ class TodoApp extends Chanters {
         </div>
         <ul class="todo-list">
             <template repeat items="task">
-                <li on-click={{removeItem}}>
+                <li>
                     <span class="todo-name">{{item.name}}</span>
-                    <span class="close">x</span>
+                    <span class="close" on-click="{{removeItem(item, task)}}">x</span>
                 </li>
             </template>
-            <div>temp</div>
+            <div>{{task.length}}</div>
         </ul>
       </div>
     `;

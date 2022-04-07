@@ -82,7 +82,6 @@ export default class Setters {
           node.processedNode = true;
           node.iteratorKey = bindingObject.raw + "." + index;
           if (reParsing) {
-            console.log(node, node.iteratorKey);
             const nodeObject = new Getters(
               node,
               this.customElement,
@@ -159,12 +158,18 @@ export default class Setters {
     node.addEventListener(
       bindingObject.eventName,
       function (event) {
-        event.stopPropagation();
-        let arr = [event];
-        // if (bindingObject.arguments && bindingObject.arguments.length)
-        //   arr = arr.concat(bindingObject.arguments);
-        bindingObject.functionBody.apply(customElement, arr);
-        event.preventDefault();
+        try {
+          event.stopPropagation();
+          let arr = [event];
+          // if (bindingObject.arguments && bindingObject.arguments.length)
+          //   arr = arr.concat(bindingObject.arguments);
+          bindingObject.functionBody.apply(customElement, arr);
+          event.preventDefault();
+        } catch (error) {
+          console.error(
+            `${bindingObject?.scopeVariable[0]} function is not defined in ${customElement.nodeName}`
+          );
+        }
       },
       true
     );

@@ -47,8 +47,7 @@ export const forLoop = (arr, callback) => {
     }
   else if (isObject(arr))
     Object.keys(arr).forEach(function (key, index) {
-      if (typeof callback === "function")
-        callback(key, arr[key], index);
+      if (typeof callback === "function") callback(key, arr[key], index);
     });
 };
 /**
@@ -72,12 +71,10 @@ export const getBindingVariables = (str) => {
 };
 
 export const getAttributeByName = (attrName, n) => {
-  return Array.prototype.slice.call(n.attributes).filter(function(attr) {
-      if (attrName === attr.name)
-          return attr;
+  return Array.prototype.slice.call(n.attributes).filter(function (attr) {
+    if (attrName === attr.name) return attr;
   });
-}
-
+};
 
 /**
  * function to set binding variables
@@ -181,7 +178,13 @@ export const attributeIterator = (
 
   forLoop(node.attributes, function (index, attr) {
     if (attr.value.indexOf("{{") !== -1) {
-      const _keys = getBindingVariables(attr.value);
+      let functionName = attr.value;
+      if (attr.value.indexOf("(") !== -1) {
+        functionName = attr.value.split("(")[0];
+        functionName = functionName + "}}";
+      }
+
+      const _keys = getBindingVariables(functionName);
 
       if (isFunction(callback) && keys(_keys).length) callback(attr, _keys);
     } else if (attr.name === "items" && node.nodeName === "TEMPLATE") {
@@ -196,7 +199,6 @@ export const cloneObject = (obj) => {
   if (isObject(obj)) return JSON.parse(JSON.stringify(obj));
 };
 
-
 export const getObject = (prototype, keys) => {
   let splitKeys = keys.split(".");
 
@@ -207,4 +209,14 @@ export const getObject = (prototype, keys) => {
     }
   }
   return prototype;
+};
+
+export const getFunctionArguments = (str) => {
+  var args = /\(\s*([^)]+?)\s*\)/.exec(str);
+
+  if (args[1]) {
+    return args[1].split(/\s*,\s*/);
+  }
+
+  return args[0];
 };

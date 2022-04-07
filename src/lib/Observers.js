@@ -90,20 +90,24 @@ export default class Observers {
     const keyClone = key.split(".").pop();
     const targetClone = cloneObject(targetObject);
 
-    Object.defineProperty(targetObject, keyClone, {
-      get: function () {
-        return targetClone[keyClone];
-      },
-      set: function (val) {
-        var change = that.apply(targetClone, keyClone, val);
-        if (!change) return;
+    try {
+      Object.defineProperty(targetObject, keyClone, {
+        get: function () {
+          return targetClone[keyClone];
+        },
+        set: function (val) {
+          var change = that.apply(targetClone, keyClone, val);
+          if (!change) return;
 
-        change.templateInstance = webComponent.templateInstance[key];
-        targetClone[keyClone] = val;
-        that.digest(change);
-      },
-      enumerable: true,
-    });
+          change.templateInstance = webComponent.templateInstance[key];
+          targetClone[keyClone] = val;
+          that.digest(change);
+        },
+        enumerable: true,
+      });
+    } catch (error) {
+      // console.log(error);
+    }
   }
 
   observeArray(bindingObject, executeRepeaters) {
@@ -122,7 +126,7 @@ export default class Observers {
       set: function (target, property, value, receiver) {
         // console.log("Set %s to %o", property, value, targetArray);
         target[property] = value;
-        if (property==="length") {
+        if (property === "length") {
           executeRepeaters(bindingObject, true);
         }
         return true;
@@ -131,7 +135,6 @@ export default class Observers {
     window.abc = proxy;
     return proxy;
   }
-
 
   digest(change) {
     if (!change.templateInstance) {

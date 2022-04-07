@@ -8,6 +8,7 @@ import {
   setBindingVariables,
   getAttributeByName,
   getObject,
+  getFunctionArguments,
 } from "./utils.js";
 import { ChantersConstants } from "./Chanter_schema.js";
 
@@ -160,6 +161,10 @@ export default class Getters {
       (bindingObject.functionBody = bindingObject.values[0]),
       (bindingObject.scopeVariable = keys),
       (bindingObject.raw = attr.value);
+
+    if (attr.value.indexOf("(") !== -1) {
+      bindingObject.arguments = getFunctionArguments(attr.value);
+    }
 
     return bindingObject;
   }
