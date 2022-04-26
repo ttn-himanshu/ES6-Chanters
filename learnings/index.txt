@@ -4,3 +4,4 @@
 
 - Life Cycle methods of a Web_Components
     --https://github.com/mdn/web-components-examples/blob/master/life-cycle-callbacks/main.js
+    --https://salesforcediaries.com/2019/12/13/connectedcallback-in-lightning-web-component/#:~:text=connectedCallback()%20in%20Lightning%20Web%20Component%20is%20part%20of%20the,is%20inserted%20into%20the%20DOM.

@@ -57,7 +57,7 @@ export default class Observers {
     const targetObject = getObject(webComponent, key);
     const keyClone = key.split(".").pop();
     const targetClone = cloneObject(targetObject);
-
+    
     try {
       Object.defineProperty(targetObject, keyClone, {
         get: function () {

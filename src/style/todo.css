@@ -1,3 +1,4 @@
+
 .todo-wrapper {
     width: 600px;
     border: 1px solid;
@@ -11,7 +12,7 @@
     border-radius: 24px;
     background-color: #f27930;
     border: 1px solid #f27930;
-    color:white;
+    color: white;
     font-size: 1rem;
     font-weight: bold;
 }
@@ -45,6 +46,12 @@
 }
 
 .todo-list .close {
+    padding-right: 15px;
+    cursor: pointer;
+}
+
+
+.todo-list .edit {
     padding-right: 15px;
     cursor: pointer;
 }

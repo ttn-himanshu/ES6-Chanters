@@ -38,7 +38,7 @@ export default class Chanters extends HTMLElement {
   };
 
   connectedCallback() {
-    // console.log("custom element connectedCallback called");
+    console.log("custom element connectedCallback called");
   }
 
   disconnectedCallback() {

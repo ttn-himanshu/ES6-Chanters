@@ -25,7 +25,6 @@ export default class Getters {
 
   __FilterNode__() {
     const { node } = this;
-
     if (node.nodeType === 8) {
       // ignore comment nodes
       return;
@@ -58,8 +57,9 @@ export default class Getters {
 
     if (!keys) return;
 
-    if (node.processedNode)
+    if (node.processedNode){
       keys = this.handleRepeaterKeys(keys, node, nodeObject, "textContent");
+    }
 
     this.__CreateTextBindingObject__(keys);
   }
@@ -117,6 +117,10 @@ export default class Getters {
           node.repeater = true;
           this.__CreateRepeater__Object(attr);
           return;
+        }
+
+        if (node.processedNode){
+          keys = this.handleRepeaterKeys(keys, node, nodeObject, "attribute", attr);
         }
 
         let bindingObject = this.__getAttributeSchema__(attr.name);
