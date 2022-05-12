@@ -87,7 +87,6 @@ export default class Setters {
         walkNodes(instance, (node) => {
           node.processedNode = true;
           node.setAttribute && node.setAttribute("processed", "yes");
-
           node.iteratorKey = bindingObject.raw + "." + index;
           node.alias = bindingObject.alias;
           if (reParsing) {
@@ -175,7 +174,7 @@ export default class Setters {
             arr = arr.concat(
               getFunctionParameters(
                 bindingObject.arguments,
-                node.iteratorKey,
+                node,
                 customElement
               )
             );

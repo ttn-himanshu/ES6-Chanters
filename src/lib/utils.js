@@ -252,14 +252,12 @@ export const checkValuesFromKeys = (o, s, mapper) => {
   return true;
 };
 
-export const getFunctionParameters = (
-  parameters,
-  iteratorKey,
-  customElement
-) => {
+export const getFunctionParameters = (parameters, node, customElement) => {
   const arr = [];
+  const { iteratorKey } = node;
+
   parameters.forEach((param) => {
-    if (param === "item" && iteratorKey) {
+    if (node.alias && iteratorKey) {
       param = iteratorKey;
     }
     if (param === "itemsIndex" && iteratorKey) {
@@ -269,4 +267,13 @@ export const getFunctionParameters = (
     }
   });
   return arr;
+};
+
+export const getReapeaterArrayPath = (node, attr) => {
+  if (node.processedNode) {
+    const splitChildKeys = attr.nodeValue.split(".");
+    splitChildKeys.shift();
+    return node.iteratorKey + "." + splitChildKeys.join("");
+  }
+  return attr.nodeValue;
 };

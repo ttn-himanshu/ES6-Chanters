@@ -47,7 +47,7 @@ export default class Observers {
   }
 
   removeFromMapper(key) {
-    const { mapper, webComponent } = this;
+    const { mapper } = this;
     const targetMapper = getObject(mapper, key);
     const keyName =  key.split(".").pop();
 

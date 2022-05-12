@@ -9,6 +9,7 @@ import {
   getAttributeByName,
   getObject,
   getFunctionArguments,
+  getReapeaterArrayPath
 } from "./utils.js";
 import { ChantersConstants } from "./Chanter_schema.js";
 
@@ -115,7 +116,6 @@ export default class Getters {
          */
         if (isRepeater) {
           node.repeater = true;
-          // debugger;
           this.__CreateRepeater__Object(attr);
           return;
         }
@@ -152,10 +152,11 @@ export default class Getters {
   __CreateRepeater__Object(attr) {
     const { proto, node, nodeObject, customElement } = this;
     const bindingObject = ChantersConstants("repeaterObject").parsingLevel;
-    bindingObject.raw = attr.nodeValue;
+    const targetArrayPath = getReapeaterArrayPath(node, attr);
+    bindingObject.raw = targetArrayPath;
     bindingObject.targetKey = attr.nodeName;
     bindingObject.alias = node.getAttribute("key") || "item";
-    bindingObject.targetArray = proto[attr.nodeValue];
+    bindingObject.targetArray = getObject(proto, targetArrayPath);
     bindingObject.proto = proto;
     bindingObject.template = node;
     bindingObject.templateClone = html([node.innerHTML]);
@@ -220,7 +221,6 @@ export default class Getters {
     let _keys = [];
     var iteratorKey = node.iteratorKey;
 
-    debugger;
     _with = keys.map((item) => {
       item = item.replace(node.alias || "item", iteratorKey);
       _keys.push(item);
