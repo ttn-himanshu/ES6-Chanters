@@ -99,7 +99,7 @@ export default class Setters {
               this.nodeObject = nodeObject;
               this.node = node;
               this.beginWork();
-              this.observer.observe(node, nodeObject);
+              this.observer.observe(node, nodeObject, reParsing);
             }
           }
         });

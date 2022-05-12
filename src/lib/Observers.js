@@ -24,27 +24,37 @@ export default class Observers {
     });
   }
 
-  observe(node, nodeObject) {
+  observe(node, nodeObject, reParsing) {
     if (nodeObject.Attribute) {
-      this.createMappings(nodeObject, "Attribute");
+      this.createMappings(nodeObject, "Attribute", reParsing);
     } else if (nodeObject.TextContent) {
-      this.createMappings(nodeObject, "TextContent");
+      this.createMappings(nodeObject, "TextContent", reParsing);
     }
   }
 
-  createMappings(nodeObject, observeType) {
+  createMappings(nodeObject, observeType, reParsing) {
     nodeObject[observeType].forEach((item) => {
       const { keys } = item;
 
       keys.forEach((key) => {
-        var check = checkValuesFromKeys(
-          this.webComponent,
-          key,
-          this.mapper
-        );
+        if (reParsing) {
+          this.removeFromMapper(key);
+        }
+        var check = checkValuesFromKeys(this.webComponent, key, this.mapper);
         if (check) this.defineProperty(key);
       });
     });
+  }
+
+  removeFromMapper(key) {
+    const { mapper, webComponent } = this;
+    const targetMapper = getObject(mapper, key);
+    const keyName =  key.split(".").pop();
+
+    if (targetMapper[keyName]) {
+      delete targetMapper[keyName];
+    }
+
   }
 
   /**
@@ -57,7 +67,7 @@ export default class Observers {
     const targetObject = getObject(webComponent, key);
     const keyClone = key.split(".").pop();
     const targetClone = cloneObject(targetObject);
-    
+
     try {
       Object.defineProperty(targetObject, keyClone, {
         get: function () {

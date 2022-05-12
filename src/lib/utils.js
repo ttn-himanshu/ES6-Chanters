@@ -206,6 +206,8 @@ export const getObject = (prototype, keys, force) => {
     const key = splitKeys[i];
     if ((key in prototype && typeof prototype[key] === "object") || force) {
       prototype = prototype[key];
+    } else {
+      // console.log("match found", prototype, keys);
     }
   }
   return prototype;
