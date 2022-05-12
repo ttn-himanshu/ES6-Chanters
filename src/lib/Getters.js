@@ -83,7 +83,10 @@ export default class Getters {
 
       function inputCallback(event) {
         webComponent.target = event.target;
-        const key = bindingObject.scopeVariable;
+        let key = bindingObject.scopeVariable;
+        if (key.startsWith(node.alias)) {
+          key = getReapeaterArrayPath(node, {nodeValue: key});
+        }
         const obj = getObject(webComponent, key);
         obj[key.split(".").pop()] = node.value;
       }
