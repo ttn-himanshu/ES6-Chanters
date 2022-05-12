@@ -9,7 +9,7 @@ import {
   getAttributeByName,
   getObject,
   getFunctionArguments,
-  getReapeaterArrayPath
+  getReapeaterArrayPath,
 } from "./utils.js";
 import { ChantersConstants } from "./Chanter_schema.js";
 
@@ -69,7 +69,7 @@ export default class Getters {
     var key = getBindingVariables(node.value)[0];
     if (key) {
       var attr = getAttributeByName("value", node);
-
+     
       let bindingObject = ChantersConstants("EventObject");
       bindingObject.values = [inputCallback];
       bindingObject = this.__CreateEventObject__(
@@ -222,7 +222,9 @@ export default class Getters {
     var iteratorKey = node.iteratorKey;
 
     _with = keys.map((item) => {
-      item = item.replace(node.alias || "item", iteratorKey);
+      if (item.startsWith(node.alias + ".")) {
+        item = item.replace(node.alias || "item", iteratorKey);
+      }
       _keys.push(item);
       return "{{" + item + "}}";
     });

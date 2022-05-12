@@ -73,7 +73,7 @@ class TodoApp extends Chanters {
                 class="fa fa-pencil-square-o edit"
                 aria-hidden="true"
               ></i>
-
+              <input type="text" class="input-todo" value="{{todoName}}" />
               <span contenteditable="{{todo.contentEditable}}" class="todo-name"
                 >{{todo.name}}</span
               >
