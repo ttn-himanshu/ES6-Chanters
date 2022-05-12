@@ -257,7 +257,7 @@ export const getFunctionParameters = (parameters, node, customElement) => {
   const { iteratorKey } = node;
 
   parameters.forEach((param) => {
-    if (node.alias && iteratorKey) {
+    if (node.alias && iteratorKey && (param.startsWith(node.alias + ".")|| param === node.alias)) {
       param = iteratorKey;
     }
     if (param === "itemsIndex" && iteratorKey) {

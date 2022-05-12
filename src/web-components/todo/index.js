@@ -69,11 +69,12 @@ class TodoApp extends Chanters {
           <template repeat items="todos" key="todo">
             <li>
               <i
-                on-click="{{editItem(todo)}}"
+                on-click="{{editItem(todo, todoName)}}"
                 class="fa fa-pencil-square-o edit"
                 aria-hidden="true"
               ></i>
-              <input type="text" class="input-todo" value="{{todo.name}}" />
+              {{todo}}
+              <input type="text" class="input-todo" value="{{todo}}" />
               <span contenteditable="{{todo.contentEditable}}" class="todo-name"
                 >{{todo.name}}</span
               >

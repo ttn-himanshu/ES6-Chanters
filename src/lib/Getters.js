@@ -84,7 +84,7 @@ export default class Getters {
       function inputCallback(event) {
         webComponent.target = event.target;
         let key = bindingObject.scopeVariable;
-        if (key.startsWith(node.alias)) {
+        if (key.startsWith(node.alias + ".")) {
           key = getReapeaterArrayPath(node, {nodeValue: key});
         }
         const obj = getObject(webComponent, key);
@@ -225,7 +225,7 @@ export default class Getters {
     var iteratorKey = node.iteratorKey;
 
     _with = keys.map((item) => {
-      if (item.startsWith(node.alias + ".")) {
+      if (item.startsWith(node.alias + ".") || item === node.alias) {
         item = item.replace(node.alias || "item", iteratorKey);
       }
       _keys.push(item);
