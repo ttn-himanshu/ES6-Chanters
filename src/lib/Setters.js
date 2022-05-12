@@ -89,6 +89,7 @@ export default class Setters {
           node.setAttribute && node.setAttribute("processed", "yes");
 
           node.iteratorKey = bindingObject.raw + "." + index;
+          node.alias = bindingObject.alias;
           if (reParsing) {
             const nodeObject = new Getters(
               node,

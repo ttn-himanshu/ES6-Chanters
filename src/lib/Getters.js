@@ -57,7 +57,7 @@ export default class Getters {
 
     if (!keys) return;
 
-    if (node.processedNode){
+    if (node.processedNode) {
       keys = this.handleRepeaterKeys(keys, node, nodeObject, "textContent");
     }
 
@@ -120,8 +120,14 @@ export default class Getters {
           return;
         }
 
-        if (node.processedNode){
-          keys = this.handleRepeaterKeys(keys, node, nodeObject, "attribute", attr);
+        if (node.processedNode) {
+          keys = this.handleRepeaterKeys(
+            keys,
+            node,
+            nodeObject,
+            "attribute",
+            attr
+          );
         }
 
         let bindingObject = this.__getAttributeSchema__(attr.name);
@@ -148,6 +154,7 @@ export default class Getters {
     const bindingObject = ChantersConstants("repeaterObject").parsingLevel;
     bindingObject.raw = attr.nodeValue;
     bindingObject.targetKey = attr.nodeName;
+    bindingObject.alias = node.getAttribute("key") || "item";
     bindingObject.targetArray = proto[attr.nodeValue];
     bindingObject.proto = proto;
     bindingObject.template = node;
@@ -213,8 +220,9 @@ export default class Getters {
     let _keys = [];
     var iteratorKey = node.iteratorKey;
 
+    debugger;
     _with = keys.map((item) => {
-      item = item.replace("item", iteratorKey);
+      item = item.replace(node.alias || "item", iteratorKey);
       _keys.push(item);
       return "{{" + item + "}}";
     });

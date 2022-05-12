@@ -65,12 +65,12 @@ class TodoApp extends Chanters {
             <button on-click="{{handleSubmit}}">Add</button>
         </div>
         <ul class="todo-list">
-            <template repeat items="todos">
+            <template repeat items="todos" key="todo">
                 <li>
                     <i on-click="{{editItem(item)}}" class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
-                    <span contenteditable="{{item.contentEditable}}" class="todo-name">{{item.name}}</span>
-                    <i class="fa fa-floppy-o {{item.saveIcon}}" on-click="{{saveItem(item)}}" aria-hidden="true"></i>
-                    <i class="fa fa-times close {{item.closeIcon}}" aria-hidden="true" on-click="{{removeItem(itemsIndex)}}"></i>
+                    <span contenteditable="{{todo.contentEditable}}" class="todo-name">{{todo.name}}</span>
+                    <i class="fa fa-floppy-o {{todo.saveIcon}}" on-click="{{saveItem(item)}}" aria-hidden="true"></i>
+                    <i class="fa fa-times close {{todo.closeIcon}}" aria-hidden="true" on-click="{{removeItem(itemsIndex)}}"></i>
                 </li>
             </template>
         </ul>
