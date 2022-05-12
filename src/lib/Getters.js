@@ -115,6 +115,7 @@ export default class Getters {
          */
         if (isRepeater) {
           node.repeater = true;
+          // debugger;
           this.__CreateRepeater__Object(attr);
           return;
         }

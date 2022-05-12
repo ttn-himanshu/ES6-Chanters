@@ -5,12 +5,18 @@ class TodoApp extends Chanters {
   static get properties() {
     return {
       todoName: "",
-      task: [
+      todos: [
         {
-          name: "first task",
+          name: "learn react",
           contentEditable: "false",
           closeIcon: "show",
           saveIcon: "hidden",
+          learningMethods: [{
+            type: "online",
+          },
+          {
+            type: "create poc app",
+          }]
         },
       ],
     };
@@ -18,7 +24,7 @@ class TodoApp extends Chanters {
 
   handleSubmit() {
     if (this.todoName) {
-      this.task.push({
+      this.todos.push({
         name: this.todoName,
         contentEditable: "false",
         closeIcon: "show",
@@ -29,13 +35,13 @@ class TodoApp extends Chanters {
   }
 
   saveItem(event, index) {
-    // this.task.splice(index, 1);
+    // this.todos.splice(index, 1);
     console.log("saveItem called", event, index)
   }
 
 
   removeItem(event, index) {
-    this.task.splice(index, 1);
+    this.todos.splice(index, 1);
   }
 
   editItem(event, item) {
@@ -59,7 +65,7 @@ class TodoApp extends Chanters {
             <button on-click="{{handleSubmit}}">Add</button>
         </div>
         <ul class="todo-list">
-            <template repeat items="task">
+            <template repeat items="todos">
                 <li>
                     <i on-click="{{editItem(item)}}" class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
                     <span contenteditable="{{item.contentEditable}}" class="todo-name">{{item.name}}</span>
