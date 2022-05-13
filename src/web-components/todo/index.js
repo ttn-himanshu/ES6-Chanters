@@ -73,8 +73,7 @@ class TodoApp extends Chanters {
                 class="fa fa-pencil-square-o edit"
                 aria-hidden="true"
               ></i>
-              {{todo}}
-              <input type="text" class="input-todo" value="{{todo}}" />
+
               <span contenteditable="{{todo.contentEditable}}" class="todo-name"
                 >{{todo.name}}</span
               >
@@ -90,8 +89,10 @@ class TodoApp extends Chanters {
                 aria-hidden="true"
                 on-click="{{removeItem(itemsIndex)}}"
               ></i>
-
-             
+              <template repeat items="todo.learningMethods">
+                <input type="text" class="input-todo" value="{{item.type}}" />
+                <li>{{item.type}}</li>
+              </template>
             </li>
           </template>
         </ul>
@@ -99,7 +100,5 @@ class TodoApp extends Chanters {
     `;
   }
 }
-{/* <template repeat items="todo.learningMethods">
-<li>{{item.type}}</li>
-</template> */}
+
 customElements.define("todo-app", TodoApp);
