@@ -182,7 +182,7 @@ export const attributeIterator = (
   if (!node.attributes) return;
 
   forLoop(node.attributes, function (index, attr) {
-    if (attr.value.indexOf("{{") !== -1) {
+    if (attr.value.indexOf("{{") !== -1 && node.nodeName !== "TEMPLATE") {
       let functionName = attr.value;
       if (attr.value.indexOf("(") !== -1) {
         functionName = attr.value.split("(")[0];
@@ -196,6 +196,8 @@ export const attributeIterator = (
       // todo add below check in above if conditoin
       // && node.nodeName === "template-repeat"
       if (isFunction(callback)) callback(attr, null, true);
+    } else if(attr.name === "if" && node.nodeName === "TEMPLATE") {
+      if (isFunction(callback)) callback(attr, null, null, true)
     }
   });
 };

@@ -49,12 +49,11 @@ export default class Observers {
   removeFromMapper(key) {
     const { mapper } = this;
     const targetMapper = getObject(mapper, key);
-    const keyName =  key.split(".").pop();
+    const keyName = key.split(".").pop();
 
     if (targetMapper[keyName]) {
       delete targetMapper[keyName];
     }
-
   }
 
   /**
@@ -132,6 +131,8 @@ export default class Observers {
           node,
           "TextContent"
         );
+      } else if (bindingObject.If) {
+        this.ObserveChanges(change, bindingObject.If, node, "If");
       }
     });
   }

@@ -7,6 +7,7 @@ import {
 } from "./utils.js";
 import { walkNodes } from "./WebComponent.js";
 import Getters from "./Getters.js";
+import { executeCondition } from "./ConditionExecuter.js";
 export default class Setters {
   constructor(...props) {
     const [node, nodeObject, customElement, proto, observer] = props;
@@ -38,10 +39,36 @@ export default class Setters {
             case "Repeater":
               this.__Setter__Repeaters(bindingObject);
               break;
+            case "If":
+              this.__Setter__Condition(bindingObject);
+              break;
           }
         });
       }
     });
+  }
+
+  __Setter__Condition(bindingObject) {
+    // console.log("__Setter__Condition", bindingObject);
+    const { node, customElement } = this;
+    const { keys, values, raw: nodeText, templateClone } = bindingObject;
+
+    const parsedCondition = setBindingVariables(
+      nodeText,
+      keys,
+      values,
+      customElement.nodeName
+    );
+    bindingObject.value = executeCondition(parsedCondition);
+    node.setAttribute("if", bindingObject.value);
+
+    if (bindingObject.value) {
+      const instance = document.importNode(templateClone.content, true);
+      bindingObject.parentNode.insertBefore(
+        instance,
+        bindingObject.nextSibling
+      );
+    }
   }
 
   setRepeaterBoundary(bindingObject, type) {
@@ -81,7 +108,7 @@ export default class Setters {
     forLoop(bindingObject.targetArray, (item, index) => {
       const { templateClone } = bindingObject;
 
-      var instance = document.importNode(templateClone.content, true);
+      const instance = document.importNode(templateClone.content, true);
 
       ((instance) => {
         walkNodes(instance, (node) => {

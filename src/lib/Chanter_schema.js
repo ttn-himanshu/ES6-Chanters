@@ -41,6 +41,15 @@ export const ChantersConstants = (key) => {
           "object contains information of top level repeater on which we are iterating i.e parsingLevel",
       },
     },
+    ConditionObject: {
+      bindingType: "If",
+      raw: "HTMLNode Attribute Value eg if = {{condition}}",
+      template: "orginal template for binding",
+      templateClone: "create a clone from orginal template",
+      value: "parsed value of condition",
+      nextSibling: "template tag nextSibling",
+      parentNode: "template tag parentNode",
+    },
   };
 
   return chantersConstants[key];

@@ -13,6 +13,8 @@ import {
 } from "./utils.js";
 import { ChantersConstants } from "./Chanter_schema.js";
 
+import { parseCondition } from "./ConditionExecuter.js";
+
 export default class Getters {
   constructor(...props) {
     const [node, customElement, proto] = props;
@@ -69,7 +71,7 @@ export default class Getters {
     var key = getBindingVariables(node.value)[0];
     if (key) {
       var attr = getAttributeByName("value", node);
-     
+
       let bindingObject = ChantersConstants("EventObject");
       bindingObject.values = [inputCallback];
       bindingObject = this.__CreateEventObject__(
@@ -85,7 +87,7 @@ export default class Getters {
         webComponent.target = event.target;
         let key = bindingObject.scopeVariable;
         if (key.startsWith(node.alias + ".")) {
-          key = getReapeaterArrayPath(node, {nodeValue: key});
+          key = getReapeaterArrayPath(node, { nodeValue: key });
         }
         const obj = getObject(webComponent, key);
         obj[key.split(".").pop()] = node.value;
@@ -111,7 +113,7 @@ export default class Getters {
       proto,
       nodeObject,
       customElement,
-      (attr, keys, isRepeater) => {
+      (attr, keys, isRepeater, isCondition) => {
         /**
          * handling for repeaters, now custom element
          * template repeat will handle by template repeat
@@ -120,6 +122,12 @@ export default class Getters {
         if (isRepeater) {
           node.repeater = true;
           this.__CreateRepeater__Object(attr);
+          return;
+        }
+
+        if (isCondition) {
+          node.condition = true;
+          this.__CreateConditionObject__(attr);
           return;
         }
 
@@ -150,6 +158,20 @@ export default class Getters {
         createBindingObject(nodeObject, bindingObject);
       }
     );
+  }
+
+  __CreateConditionObject__(attr) {
+    const { proto, node, nodeObject, customElement } = this;
+    const bindingObject = ChantersConstants("ConditionObject");
+    bindingObject.nextSibling = node.nextSibling;
+    bindingObject.parentNode = node.parentNode;
+    bindingObject.raw = attr.value;
+    bindingObject.templateClone = html([node.innerHTML]);
+    bindingObject.template = node;
+    bindingObject.proto = proto;
+    bindingObject.customElement = customElement;
+    parseCondition(bindingObject, nodeObject);
+    createBindingObject(nodeObject, bindingObject);
   }
 
   __CreateRepeater__Object(attr) {
