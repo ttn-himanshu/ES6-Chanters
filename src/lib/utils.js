@@ -10,6 +10,11 @@ export const isString = (value) => {
   return typeof value === "string";
 };
 
+export const isBoolean = (value) => {
+  return typeof value === "boolean";
+};
+
+
 /**
  * To check if a node contains text content or not
  **/
@@ -133,7 +138,7 @@ const byString = (proto, str, customElement, node, nodeObject) => {
     var k = nthStr[i];
 
     if (k in prototype) {
-      if ((isString(prototype[k]) || isNumber(prototype[k])) && nodeObject) {
+      if ((isString(prototype[k]) || isNumber(prototype[k])|| isBoolean(prototype[k])) && nodeObject) {
         mapNodes(node, nodeObject, templateInstance, str);
       }
       prototype = prototype[k];
