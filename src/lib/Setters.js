@@ -10,12 +10,13 @@ import Getters from "./Getters.js";
 import { executeCondition } from "./ConditionExecuter.js";
 export default class Setters {
   constructor(...props) {
-    const [node, nodeObject, customElement, proto, observer] = props;
+    const [node, nodeObject, customElement, proto, observer, reParsing] = props;
     this.node = node;
     this.nodeObject = nodeObject;
     this.customElement = customElement;
     this.proto = proto;
     this.observer = observer;
+    this.reParsing = reParsing;
 
     this.beginWork();
   }
@@ -49,41 +50,61 @@ export default class Setters {
   }
 
   __Setter__Condition(bindingObject) {
-    // console.log("__Setter__Condition", bindingObject);
-    const { node, customElement } = this;
-    const { keys, values, raw: nodeText, templateClone } = bindingObject;
+    const { keys:bindingKeys, values, raw, templateClone, nextSibling } = bindingObject;
+    const {
+      node,
+      customElement: { nodeName },
+      reParsing,
+    } = this;
 
-    const parsedCondition = setBindingVariables(
-      nodeText,
-      keys,
-      values,
-      customElement.nodeName
-    );
+    /**
+     * parsing condition
+     */
+    const parsedCondition = setBindingVariables(raw, bindingKeys, values, nodeName);
     bindingObject.value = executeCondition(parsedCondition);
     node.setAttribute("if", bindingObject.value);
 
+    /**
+     * creating if DOM
+     * */
     if (bindingObject.value) {
+      this.setBoundary(bindingObject, "start", `start of if condition`);
       const instance = document.importNode(templateClone.content, true);
-      bindingObject.parentNode.insertBefore(
-        instance,
-        bindingObject.nextSibling
-      );
+      if (reParsing) {
+        walkNodes(instance, (node) => {
+          node.setAttribute && node.setAttribute("processed", "yes");
+          const nodeObject = new Getters(node, this.customElement, this.proto);
+          if (keys(nodeObject).length) {
+            this.nodeObject = nodeObject;
+            this.node = node;
+            this.beginWork();
+          }
+        });
+      }
+      bindingObject.parentNode.insertBefore(instance, nextSibling);
+      this.setBoundary(bindingObject, "end", `end of if condition`);
+    } else {
+      if (bindingObject.start && bindingObject.end) {
+        this.cleanUp(bindingObject, true);
+        bindingObject.start.remove();
+        bindingObject.end.remove();
+      }
     }
   }
 
-  setRepeaterBoundary(bindingObject, type) {
-    const { template, raw } = bindingObject;
+  setBoundary(bindingObject, type, message) {
+    const { template } = bindingObject;
     if (template) {
-      const comment = document.createComment(`${type} of array ${raw}`);
+      const comment = document.createComment(message);
       bindingObject.parentNode.insertBefore(comment, bindingObject.nextSibling);
       bindingObject[type] = comment;
     }
   }
 
   __Setter__Repeaters(bindingObject) {
-    this.setRepeaterBoundary(bindingObject, "start");
+    this.setBoundary(bindingObject, "start", `start of array ${raw}`);
     this.executeRepeaters(bindingObject);
-    this.setRepeaterBoundary(bindingObject, "end");
+    this.setBoundary(bindingObject, "end"`end of array ${raw}`);
     bindingObject.nextSibling = bindingObject.end;
 
     /**
@@ -139,7 +160,7 @@ export default class Setters {
     });
   }
 
-  cleanUp(bindingObject) {
+  cleanUp(bindingObject, notDeleteTemplateInstance) {
     const { parentNode, start, end } = bindingObject;
     let canDelete = false;
 
@@ -165,10 +186,11 @@ export default class Setters {
      * Cleaning up custom element's
      * template instance.
      */
-
-    for (let key in this.customElement.templateInstance) {
-      if (key.startsWith(bindingObject.raw + ".")) {
-        delete this.customElement.templateInstance[key];
+    if (notDeleteTemplateInstance) {
+      for (let key in this.customElement.templateInstance) {
+        if (key.startsWith(bindingObject.raw + ".")) {
+          delete this.customElement.templateInstance[key];
+        }
       }
     }
   }

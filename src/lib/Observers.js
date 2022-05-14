@@ -171,7 +171,9 @@ export default class Observers {
       node,
       { [changeType]: bindingObject },
       webComponent,
-      prototypeClone
+      prototypeClone,
+      null,
+      true
     );
   }
 }

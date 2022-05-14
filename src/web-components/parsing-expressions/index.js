@@ -8,11 +8,8 @@ class ParsingExpression extends Chanters {
         <button on-click="{{handleClick}}">change flag</button>
         <h1>{{flag}}</h1>
         <template if="{{flag}}">
-          <span>rendered when {{flag}} is true</span>
-        </template>
-
-        <template if="{{flag}} === false && {{flag2}} === 3">
-          <span>rendered when {{flag}} {{flag2}} is false</span>
+          <div>flag = {{flag}}</div>
+          <div>flag2 = {{flag2}}</div>
         </template>
       </div>
     `;
