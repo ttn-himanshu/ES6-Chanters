@@ -105,6 +105,7 @@ export default class Setters {
             this.nodeObject = nodeObject;
             this.node = node;
             this.beginWork();
+            this.observer.observe(node, nodeObject, reParsing);
           }
         });
       }
@@ -258,9 +259,10 @@ export default class Setters {
           bindingObject.functionBody.apply(customElement, arr);
           event.preventDefault();
         } catch (error) {
-          console.error(
-            `${bindingObject?.scopeVariable[0]} function is not defined in ${customElement.nodeName}`
-          );
+          console.error(error.message)
+          // console.error(
+          //   `${bindingObject?.scopeVariable[0]} function is not defined in ${customElement.nodeName}`
+          // );
         }
       },
       true
