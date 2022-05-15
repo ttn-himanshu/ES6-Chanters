@@ -5,50 +5,37 @@ class TodoApp extends Chanters {
   static get properties() {
     return {
       todoName: "",
-      todos: [
-        {
-          name: "learn react",
-          contentEditable: "false",
-          closeIcon: "show",
-          saveIcon: "hidden",
-          learningMethods: [
-            {
-              type: "online",
-            },
-            {
-              type: "create poc app",
-            },
-          ],
-        },
-      ],
+      todos: [],
     };
   }
 
-  handleSubmit() {
-    if (this.todoName) {
-      this.todos.push({
-        name: this.todoName,
-        contentEditable: "false",
-        closeIcon: "show",
-        saveIcon: "hidden",
-      });
+  addTodo(event) {
+    if (event.keyCode === 13) {
+      this.todos.push({ name: this.todoName, completed: false, edit: false });
       this.todoName = "";
     }
   }
 
-  saveItem(event, index) {
-    // this.todos.splice(index, 1);
-    console.log("saveItem called", event, index);
+  completeTask(event, todo) {
+    console.log(todo);
   }
 
-  removeItem(event, index) {
+  removeTodo(event, index) {
     this.todos.splice(index, 1);
   }
 
-  editItem(event, item) {
-    item.contentEditable = item.contentEditable === "false" ? "true" : "false";
-    item.closeIcon = item.closeIcon == "show" ? "hidden" : "show";
-    item.saveIcon = item.closeIcon == "show" ? "hidden" : "show";
+  editTodo(event, todo) {
+    todo.edit = true;
+  }
+
+  saveTodo(event, todo, itemsIndex) {
+    if (event.keyCode === 13) {
+      if (!todo.name) {
+        this.removeTodo(event, itemsIndex);
+      } else {
+        todo.edit = false;
+      }
+    }
   }
 
   static get template() {
@@ -58,41 +45,44 @@ class TodoApp extends Chanters {
         @import "src/style/todo.css";
         @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
       </style>
+      <label class="heading">todos</label>
 
       <div class="todo-wrapper">
-        <label>Todo App</label>
-        <div class="todo-input">
-          <input type="text" class="input-todo" value="{{todoName}}" />
-          <button on-click="{{handleSubmit}}">Add</button>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            placeholder="What needs to be done?"
+            class="txttodo"
+            value="{{todoName}}"
+            on-keyup="{{addTodo}}"
+          />
         </div>
         <ul class="todo-list">
           <template repeat items="todos" key="todo">
             <li>
-              <i
-                on-click="{{editItem(todo, todoName)}}"
-                class="fa fa-pencil-square-o edit"
-                aria-hidden="true"
-              ></i>
-
-              <span contenteditable="{{todo.contentEditable}}" class="todo-name"
-                >{{todo.name}}</span
-              >
-
-              <i
-                class="fa fa-floppy-o {{todo.saveIcon}}"
-                on-click="{{saveItem(todo)}}"
-                aria-hidden="true"
-              ></i>
-
-              <i
-                class="fa fa-times close {{todo.closeIcon}}"
-                aria-hidden="true"
-                on-click="{{removeItem(itemsIndex)}}"
-              ></i>
-              <template repeat items="todo.learningMethods">
-                <input type="text" class="input-todo" value="{{item.type}}" />
-                <li>{{item.type}}</li>
+              <input
+                type="checkbox"
+                checked="{{todo.completed}}"
+                class="toggle"
+              />
+              <template if="!{{todo.edit}}">
+                <label on-dblclick="{{editTodo(todo)}}" class="list-item-todo"
+                  >{{todo.name}}</label
+                >
               </template>
+              <template if="{{todo.edit}}">
+                <input
+                  type="text"
+                  class="list-item-todo list-item-input"
+                  value="{{todo.name}}"
+                  on-keyup="{{saveTodo(todo, itemsIndex)}}"
+                />
+              </template>
+              <i
+                class="fa fa-times close"
+                aria-hidden="true"
+                on-click="{{removeTodo(itemsIndex)}}"
+              ></i>
             </li>
           </template>
         </ul>
@@ -101,4 +91,5 @@ class TodoApp extends Chanters {
   }
 }
 
+// on-click="{{completeTask(todo)}}"
 customElements.define("todo-app", TodoApp);

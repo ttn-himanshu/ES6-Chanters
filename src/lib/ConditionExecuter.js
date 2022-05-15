@@ -1,19 +1,31 @@
-import { getValuesFromKeys, getBindingVariables } from "./utils.js";
+import {
+  getValuesFromKeys,
+  getBindingVariables,
+  handleRepeaterKeys,
+} from "./utils.js";
 
-export const parseCondition = (bindingObject, nodeObject) => {
+export const parseCondition = (bindingObject, nodeObject, attr) => {
   const { proto, customElement, template } = bindingObject;
-  let keys = getBindingVariables(bindingObject.raw);
-  const values = getValuesFromKeys(
-    keys,
+  bindingObject.keys = getBindingVariables(bindingObject.raw);
+
+  if (template.processedNode) {
+    bindingObject.keys = handleRepeaterKeys(
+      bindingObject.keys,
+      template,
+      nodeObject,
+      "attribute",
+      attr
+    );
+    bindingObject.raw = attr.value;
+  }
+  bindingObject.values = getValuesFromKeys(
+    bindingObject.keys,
     proto,
     customElement,
     template,
     nodeObject
   );
-
-  bindingObject.keys = keys;
-  bindingObject.values = values;
-  bindingObject.valuesType = values.map(val => typeof val)
+  bindingObject.valuesType = bindingObject.values.map((val) => typeof val);
 };
 
 export const executeCondition = (str) => {

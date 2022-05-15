@@ -100,12 +100,16 @@ export default class Setters {
       if (reParsing) {
         walkNodes(instance, (node) => {
           node.setAttribute && node.setAttribute("processed", "yes");
-          const nodeObject = new Getters(node, this.customElement, this.proto);
+          node.processedNode = bindingObject.template.processedNode;
+          node.iteratorKey = bindingObject.template.iteratorKey;
+          node.alias = bindingObject.template.alias;
+
+          const nodeObject = new Getters(node, this.customElement, this.customElement);
           if (keys(nodeObject).length) {
             this.nodeObject = nodeObject;
             this.node = node;
             this.beginWork();
-            this.observer.observe(node, nodeObject, reParsing);
+            // this.observer.observe(node, nodeObject, reParsing);
           }
         });
       }

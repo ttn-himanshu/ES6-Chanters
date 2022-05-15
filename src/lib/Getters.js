@@ -5,12 +5,12 @@ import {
   createBindingObject,
   attributeIterator,
   html,
-  setBindingVariables,
   getAttributeByName,
   getObject,
   getFunctionArguments,
   getReapeaterArrayPath,
   isInputNode,
+  handleRepeaterKeys
 } from "./utils.js";
 import { ChantersConstants } from "./Chanter_schema.js";
 
@@ -62,7 +62,7 @@ export default class Getters {
     if (!keys) return;
 
     if (node.processedNode) {
-      keys = this.handleRepeaterKeys(keys, node, nodeObject, "textContent");
+      keys = handleRepeaterKeys(keys, node, nodeObject, "textContent");
     }
 
     this.__CreateTextBindingObject__(keys);
@@ -136,7 +136,7 @@ export default class Getters {
         }
 
         if (node.processedNode) {
-          keys = this.handleRepeaterKeys(
+          keys = handleRepeaterKeys(
             keys,
             node,
             nodeObject,
@@ -174,7 +174,7 @@ export default class Getters {
     bindingObject.template = node;
     bindingObject.proto = proto;
     bindingObject.customElement = customElement;
-    parseCondition(bindingObject, nodeObject);
+    parseCondition(bindingObject, nodeObject, attr);
     createBindingObject(nodeObject, bindingObject);
   }
 
@@ -244,29 +244,5 @@ export default class Getters {
     createBindingObject(nodeObject, bindingObject);
   }
 
-  handleRepeaterKeys(keys, node, nodeObject, type, attr) {
-    var _from = keys;
-    var _with = [];
-    let _keys = [];
-    var iteratorKey = node.iteratorKey;
 
-    _with = keys.map((item) => {
-      if (item.startsWith(node.alias + ".") || item === node.alias) {
-        item = item.replace(node.alias || "item", iteratorKey);
-      }
-      _keys.push(item);
-      return "{{" + item + "}}";
-    });
-
-    if (type === "textContent")
-      node.textContent = setBindingVariables(node.textContent, _from, _with);
-    else if (type === "attribute") {
-      node.setAttribute(
-        attr.name,
-        setBindingVariables(attr.value, _from, _with)
-      );
-    }
-
-    return _keys;
-  }
 }

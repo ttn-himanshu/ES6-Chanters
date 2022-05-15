@@ -1,57 +1,77 @@
-
 .todo-wrapper {
     width: 600px;
-    border: 1px solid;
     margin: 0 auto;
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 25px 50px 0 rgb(0 0 0 / 10%);
+    background: white;
 }
 
-.todo-input button {
-    height: 48px;
-    padding: 13px 90px 13px 91px;
-    opacity: 1;
-    border-radius: 24px;
-    background-color: #f27930;
-    border: 1px solid #f27930;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
+.todo-app {
+    background: white;
 }
 
-.input-todo {
-    width: 328px;
+.heading {
+    width: 100%;
+    font-size: 100px;
+    font-weight: 100;
+    text-align: center;
+    color: rgba(175, 47, 47, 0.15);
+    -webkit-text-rendering: optimizeLegibility;
+    -moz-text-rendering: optimizeLegibility;
+    text-rendering: optimizeLegibility;
+    justify-content: center;
+    display: flex;
+}
+
+
+.txttodo {
+    width: 100%;
     height: 48px;
-    margin: 0 0 15px;
-    padding: 9px 0 0.5px;
     border-radius: 8px;
-    border: solid 1px #ebedf0;
-    background-color: #f7f8f9;
+    padding: 16px 16px 16px 60px;
+    border: none;
+    outline: none;
+    background: rgba(0, 0, 0, 0.003);
+    box-shadow: inset 0 -2px 1px rgb(0 0 0 / 3%);
+    font-size: 24px;
+    line-height: 1.4em;
+}
+
+.todo-list {
+    list-style: none;
 }
 
 .todo-list li {
-    width: 328px;
-    height: 54px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px 0 rgba(23, 26, 33, 0.12);
-    border: solid 1px #ebedf0;
-    background-color: #fff;
-    list-style: none;
+    position: relative;
+    font-size: 24px;
+    border-bottom: 1px solid #ededed;
+    padding: 15px 10px;
     display: flex;
     align-items: center;
-    padding-left: 15px;
-    display: flex;
 }
 
-.todo-list .todo-name {
-    flex: 1 1;
-}
-
-.todo-list .close {
-    padding-right: 15px;
-    cursor: pointer;
+.todo-list li .toggle {
+    height: 20px;
+    width: 30px;
 }
 
 
-.todo-list .edit {
-    padding-right: 15px;
-    cursor: pointer;
+.todo-list li .list-item-todo {
+    flex: 1 0;
+    padding-left: 10px;
+}
+
+.todo-list li .list-item-input {
+    width: 100%;
+    font-size: 24px;
+    line-height: 1.4em;
+    padding: 6px;
+    border: 1px solid #999;
+    box-shadow: inset 0 -1px 5px 0 rgb(0 0 0 / 20%);
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+.todo-list li .close {
+    -webkit-text-stroke: 3px white;
+    color: #cc9a9a;
 }

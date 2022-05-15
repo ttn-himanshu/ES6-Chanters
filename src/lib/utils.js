@@ -300,3 +300,27 @@ export const isInputNode = (node) => {
       node.getAttribute("checked").indexOf("{{") !== -1)
   );
 };
+
+
+export const handleRepeaterKeys = (keys, node, nodeObject, type, attr) => {
+  var _from = keys;
+  var _with = [];
+  let _keys = [];
+  var iteratorKey = node.iteratorKey;
+
+  _with = keys.map((item) => {
+    if (item.startsWith(node.alias + ".") || item === node.alias) {
+      item = item.replace(node.alias || "item", iteratorKey);
+    }
+    _keys.push(item);
+    return "{{" + item + "}}";
+  });
+
+  if (type === "textContent")
+    node.textContent = setBindingVariables(node.textContent, _from, _with);
+  else if (type === "attribute") {
+    node.setAttribute(attr.name, setBindingVariables(attr.value, _from, _with));
+  }
+
+  return _keys;
+};
