@@ -273,10 +273,11 @@ export default class Setters {
           bindingObject.functionBody.apply(customElement, arr);
           event.preventDefault();
         } catch (error) {
-          console.error(error.message);
+          // console.error(error.message);
           // console.error(
           //   `${bindingObject?.scopeVariable[0]} function is not defined in ${customElement.nodeName}`
           // );
+          throw error;
         }
       },
       true

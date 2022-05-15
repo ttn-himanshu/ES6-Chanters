@@ -6,6 +6,7 @@ class TodoApp extends Chanters {
     return {
       todoName: "",
       todos: [],
+      showFooter: "hide",
     };
   }
 
@@ -13,6 +14,7 @@ class TodoApp extends Chanters {
     if (event.keyCode === 13) {
       this.todos.push({ name: this.todoName, completed: false, edit: false });
       this.todoName = "";
+      this.showFooter = "show";
     }
   }
 
@@ -22,6 +24,9 @@ class TodoApp extends Chanters {
 
   removeTodo(event, index) {
     this.todos.splice(index, 1);
+    if (!this.todos.length) {
+      this.showFooter = "hide";
+    }
   }
 
   editTodo(event, todo) {
@@ -36,6 +41,10 @@ class TodoApp extends Chanters {
         todo.edit = false;
       }
     }
+  }
+
+  setActiveTab(activeTab) {
+    console.log(activeTab);
   }
 
   static get template() {
@@ -86,9 +95,9 @@ class TodoApp extends Chanters {
             </li>
           </template>
         </ul>
-        <template if="{{todos.length}}">
-          <div class="footer">himandhu</div>
-        </template>
+        <tabs-selector class="{{showFooter}}" data-setactivetab="setActiveTab">
+          <label slot="todo-counter">{{todos.length}} item left</label>
+        </tabs-selector>
       </div>
     `;
   }
