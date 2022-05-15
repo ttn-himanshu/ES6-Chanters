@@ -29,6 +29,8 @@ export default class Observers {
       this.createMappings(nodeObject, "Attribute", reParsing);
     } else if (nodeObject.TextContent) {
       this.createMappings(nodeObject, "TextContent", reParsing);
+    } else if (nodeObject.If) {
+      this.createMappings(nodeObject, "If", reParsing);
     }
   }
 
