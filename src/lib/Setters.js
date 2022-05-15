@@ -57,6 +57,12 @@ export default class Setters {
       templateClone,
       nextSibling,
     } = bindingObject;
+
+    if (!raw) {
+      console.warn("Condition not found template", templateClone.outerHTML);
+      return;
+    }
+
     const {
       node,
       customElement: { nodeName },
@@ -67,7 +73,7 @@ export default class Setters {
      * parsing condition
      */
     values = values.map((val) => {
-      return val === "" ? null : val;
+      return typeof val === "string" ? `'${val}'` : val;
     });
     const parsedCondition = setBindingVariables(
       raw,
