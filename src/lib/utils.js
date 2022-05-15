@@ -14,7 +14,6 @@ export const isBoolean = (value) => {
   return typeof value === "boolean";
 };
 
-
 /**
  * To check if a node contains text content or not
  **/
@@ -138,7 +137,12 @@ const byString = (proto, str, customElement, node, nodeObject) => {
     var k = nthStr[i];
 
     if (k in prototype) {
-      if ((isString(prototype[k]) || isNumber(prototype[k])|| isBoolean(prototype[k])) && nodeObject) {
+      if (
+        (isString(prototype[k]) ||
+          isNumber(prototype[k]) ||
+          isBoolean(prototype[k])) &&
+        nodeObject
+      ) {
         mapNodes(node, nodeObject, templateInstance, str);
       }
       prototype = prototype[k];
@@ -196,8 +200,8 @@ export const attributeIterator = (
       // todo add below check in above if conditoin
       // && node.nodeName === "template-repeat"
       if (isFunction(callback)) callback(attr, null, true);
-    } else if(attr.name === "if" && node.nodeName === "TEMPLATE") {
-      if (isFunction(callback)) callback(attr, null, null, true)
+    } else if (attr.name === "if" && node.nodeName === "TEMPLATE") {
+      if (isFunction(callback)) callback(attr, null, null, true);
     }
   });
 };
@@ -264,7 +268,11 @@ export const getFunctionParameters = (parameters, node, customElement) => {
   const { iteratorKey } = node;
 
   parameters.forEach((param) => {
-    if (node.alias && iteratorKey && (param.startsWith(node.alias + ".")|| param === node.alias)) {
+    if (
+      node.alias &&
+      iteratorKey &&
+      (param.startsWith(node.alias + ".") || param === node.alias)
+    ) {
       param = iteratorKey;
     }
     if (param === "itemsIndex" && iteratorKey) {
@@ -283,4 +291,12 @@ export const getReapeaterArrayPath = (node, attr) => {
     return node.iteratorKey + "." + splitChildKeys.join("");
   }
   return attr.nodeValue;
+};
+
+export const isInputNode = (node) => {
+  return (
+    node.nodeName === "INPUT" &&
+    (node.value.indexOf("{{") !== -1 ||
+      node.getAttribute("checked").indexOf("{{") !== -1)
+  );
 };

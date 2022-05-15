@@ -165,7 +165,7 @@ export default class Observers {
       });
     });
 
-    if (node.nodeName === "INPUT") {
+    if (node.nodeName === "INPUT" && node.type !== "checkbox") {
       node.value = change.newValue;
     }
 

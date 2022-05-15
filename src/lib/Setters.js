@@ -225,7 +225,7 @@ export default class Setters {
 
   __Setter__Attribute(bindingObject) {
     const { node, customElement } = this;
-    const { keys, values, raw: nodeText } = bindingObject;
+    const { keys, values, raw: nodeText, attributeName } = bindingObject;
 
     const value = setBindingVariables(
       nodeText,
@@ -234,7 +234,13 @@ export default class Setters {
       customElement.nodeName
     );
 
-    node.setAttribute(bindingObject.attributeName, value);
+    
+    if (node.type === "checkbox" && attributeName==="checked") {
+      node.checked = values[0];
+      node.removeAttribute("checked");
+    } else {
+      node.setAttribute(bindingObject.attributeName, value);
+    }
   }
 
   __Setter__Events(bindingObject) {

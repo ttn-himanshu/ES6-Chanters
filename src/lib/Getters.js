@@ -10,6 +10,7 @@ import {
   getObject,
   getFunctionArguments,
   getReapeaterArrayPath,
+  isInputNode,
 } from "./utils.js";
 import { ChantersConstants } from "./Chanter_schema.js";
 
@@ -68,17 +69,20 @@ export default class Getters {
   }
 
   __GetterInput__(node, prototype, nodeObject, webComponent) {
-    var key = getBindingVariables(node.value)[0];
-    if (key) {
-      var attr = getAttributeByName("value", node);
+    const isCheckBox = node.type === "checkbox";
+    const inputBinding = isCheckBox ? node.getAttribute("checked") : node.value;
 
+    const key = getBindingVariables(inputBinding)[0];
+    if (key) {
       let bindingObject = ChantersConstants("EventObject");
       bindingObject.values = [inputCallback];
+
+      const attr = getAttributeByName((isCheckBox && "checked") || "value", node);
       bindingObject = this.__CreateEventObject__(
         attr[0],
         key,
         bindingObject,
-        "input"
+        isCheckBox ? "change" : "input"
       );
 
       createBindingObject(nodeObject, bindingObject);
@@ -90,7 +94,7 @@ export default class Getters {
           key = getReapeaterArrayPath(node, { nodeValue: key });
         }
         const obj = getObject(webComponent, key);
-        obj[key.split(".").pop()] = node.value;
+        obj[key.split(".").pop()] =isCheckBox ? node.checked : node.value;
       }
     }
   }
@@ -104,7 +108,7 @@ export default class Getters {
     // setting reference to node inside webcomponent
     if (node.id) customElement.$[node.id] = node;
 
-    if (node.nodeName === "INPUT" && node.value.indexOf("{{") !== -1) {
+    if (isInputNode(node)) {
       this.__GetterInput__(node, proto, nodeObject, customElement);
     }
 
