@@ -50,7 +50,13 @@ export default class Setters {
   }
 
   __Setter__Condition(bindingObject) {
-    const { keys:bindingKeys, values, raw, templateClone, nextSibling } = bindingObject;
+    let {
+      keys: bindingKeys,
+      values,
+      raw,
+      templateClone,
+      nextSibling,
+    } = bindingObject;
     const {
       node,
       customElement: { nodeName },
@@ -60,7 +66,15 @@ export default class Setters {
     /**
      * parsing condition
      */
-    const parsedCondition = setBindingVariables(raw, bindingKeys, values, nodeName);
+    values = values.map((val) => {
+      return val === "" ? null : val;
+    });
+    const parsedCondition = setBindingVariables(
+      raw,
+      bindingKeys,
+      values,
+      nodeName
+    );
     bindingObject.value = executeCondition(parsedCondition);
     node.setAttribute("if", bindingObject.value);
 
@@ -186,7 +200,7 @@ export default class Setters {
      * Cleaning up custom element's
      * template instance.
      */
-    if (notDeleteTemplateInstance) {
+    if (!notDeleteTemplateInstance) {
       for (let key in this.customElement.templateInstance) {
         if (key.startsWith(bindingObject.raw + ".")) {
           delete this.customElement.templateInstance[key];
