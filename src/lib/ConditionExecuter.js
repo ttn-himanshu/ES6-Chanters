@@ -13,6 +13,7 @@ export const parseCondition = (bindingObject, nodeObject) => {
 
   bindingObject.keys = keys;
   bindingObject.values = values;
+  bindingObject.valuesType = values.map(val => typeof val)
 };
 
 export const executeCondition = (str) => {

@@ -5,20 +5,20 @@ class ParsingExpression extends Chanters {
   static get template() {
     return html`
       <div>
-        <button on-click="{{handleClick}}">change flag</button>
-        <h1>{{flag}}</h1>
-        <template if="{{flag}}">
-          <div>flag = {{flag}}</div>
-          <div>flag2 = {{flag2}}</div>
-        </template>
+        <input type="text" value="{{user.age}}" />
+        <h1>{{user.name}}</h1>
+        <template if="{{user.age}}==0"> hurray1 </template>
+        <template if="{{user.age}}==10"> hurray2 </template>
       </div>
     `;
   }
 
   static get properties() {
     return {
-      flag: true,
-      flag2: 2,
+      user: {
+        name: "himanshu",
+        age: 0,
+      },
     };
   }
 

@@ -56,6 +56,7 @@ export default class Setters {
       raw,
       templateClone,
       nextSibling,
+      valuesType
     } = bindingObject;
 
     if (!raw) {
@@ -72,8 +73,14 @@ export default class Setters {
     /**
      * parsing condition
      */
-    values = values.map((val) => {
-      return typeof val === "string" ? `'${val}'` : val;
+    values = values.map((val, index) => {
+      if (typeof val === "string" && valuesType[index]==="string") {
+        return `'${val}'`;
+      }
+      if (valuesType[index] === "number") {
+        val = val === "" ? null : +val;
+      }
+      return val;
     });
     const parsedCondition = setBindingVariables(
       raw,
