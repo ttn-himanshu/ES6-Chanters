@@ -56,7 +56,7 @@ export default class Setters {
       raw,
       templateClone,
       nextSibling,
-      valuesType
+      valuesType,
     } = bindingObject;
 
     if (!raw) {
@@ -74,7 +74,7 @@ export default class Setters {
      * parsing condition
      */
     values = values.map((val, index) => {
-      if (typeof val === "string" && valuesType[index]==="string") {
+      if (typeof val === "string" && valuesType[index] === "string") {
         return `'${val}'`;
       }
       if (valuesType[index] === "number") {
@@ -130,9 +130,9 @@ export default class Setters {
   }
 
   __Setter__Repeaters(bindingObject) {
-    this.setBoundary(bindingObject, "start", `start of array ${raw}`);
+    this.setBoundary(bindingObject, "start", `start of template repeat`);
     this.executeRepeaters(bindingObject);
-    this.setBoundary(bindingObject, "end"`end of array ${raw}`);
+    this.setBoundary(bindingObject, "end", `end of template repeat`);
     bindingObject.nextSibling = bindingObject.end;
 
     /**
@@ -259,7 +259,7 @@ export default class Setters {
           bindingObject.functionBody.apply(customElement, arr);
           event.preventDefault();
         } catch (error) {
-          console.error(error.message)
+          console.error(error.message);
           // console.error(
           //   `${bindingObject?.scopeVariable[0]} function is not defined in ${customElement.nodeName}`
           // );
