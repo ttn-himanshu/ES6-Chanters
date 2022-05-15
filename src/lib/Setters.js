@@ -220,7 +220,11 @@ export default class Setters {
      */
     if (!notDeleteTemplateInstance) {
       for (let key in this.customElement.templateInstance) {
-        if (key.startsWith(bindingObject.raw + ".")) {
+        if (
+          key.startsWith(
+            bindingObject.raw + "." && key !== bindingObject.raw + "." + length
+          )
+        ) {
           delete this.customElement.templateInstance[key];
         }
       }

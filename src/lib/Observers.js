@@ -107,11 +107,27 @@ export default class Observers {
         target[property] = value;
         if (property === "length") {
           executeRepeaters(bindingObject, true);
+
+          /**
+           * Executing if condition when array length changes
+           */
+          if (
+            that.webComponent.templateInstance[bindingObject.raw + ".length"]
+          ) {
+            that.digest({
+              arrayLengthObserver: true,
+              newValue: value,
+              name: bindingObject.raw + ".length",
+              templateInstance:
+                that.webComponent.templateInstance[
+                  bindingObject.raw + ".length"
+                ],
+            });
+          }
         }
         return true;
       },
     });
-    window.abc = proxy;
     return proxy;
   }
 
@@ -153,17 +169,21 @@ export default class Observers {
     }
   }
 
-  ObserveChanges(change, bindingObject, node, changeType) {
-    const { webComponent, prototypeClone } = this;
-
+  updateValues(bindingObject, change) {
     bindingObject.forEach(function (item) {
       var effectedPropertyName = change.name;
 
       item.keys.forEach(function (key, index) {
-        key = key.split(".").pop();
+        key = change.arrayLengthObserver ? key : key.split(".").pop();
         if (key === effectedPropertyName) item.values[index] = change.newValue;
       });
     });
+  }
+
+  ObserveChanges(change, bindingObject, node, changeType) {
+    const { webComponent, prototypeClone } = this;
+
+    this.updateValues(bindingObject, change);
 
     if (node.nodeName === "INPUT" && node.type !== "checkbox") {
       node.value = change.newValue;

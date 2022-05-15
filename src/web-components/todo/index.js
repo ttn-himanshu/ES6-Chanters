@@ -86,6 +86,9 @@ class TodoApp extends Chanters {
             </li>
           </template>
         </ul>
+        <template if="{{todos.length}}">
+          <div class="footer">himandhu</div>
+        </template>
       </div>
     `;
   }

@@ -10,7 +10,9 @@ class ParsingExpression extends Chanters {
 
         <template if="{{user.name}}=='himanshu'">
           <h1>welcome himanshu</h1>
-         
+          <template if="{{user.age}} === 18">
+            <h4>Congrats Kiran you are eligible for viting</h4>
+          </template>
         </template>
 
         <template if="{{user.name}}=='kiran'">
