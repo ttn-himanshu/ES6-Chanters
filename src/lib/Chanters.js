@@ -1,10 +1,6 @@
 import WebComponent from "./WebComponent.js";
 
 export default class Chanters extends HTMLElement {
-  static get observedAttributes() {
-    console.log("custom element observedAttributes called", this);
-  }
-
   constructor() {
     super();
     this.init();
@@ -15,17 +11,16 @@ export default class Chanters extends HTMLElement {
   init = () => {
     this.attachShadowRoot();
     const webComponent = new WebComponent(this, this.constructor.properties);
-    this.onReady(webComponent);
   };
 
-  onReady = (webComponent) => {
-    if (
-      webComponent?.customElement?.onReady &&
-      typeof webComponent.customElement.onReady === "function"
-    ) {
-      webComponent.customElement.onReady();
-    }
-  };
+  // onReady = (webComponent) => {
+  //   if (
+  //     webComponent?.customElement?.onReady &&
+  //     typeof webComponent.customElement.onReady === "function"
+  //   ) {
+  //     webComponent.customElement.onReady();
+  //   }
+  // };
 
   /**
    * create template tag and append it into custom elemants shadow root
@@ -38,14 +33,17 @@ export default class Chanters extends HTMLElement {
   };
 
   connectedCallback() {
-    console.log("custom element connectedCallback called");
+    console.log("custom element connectedCallback called", this.nodeName);
   }
 
   disconnectedCallback() {
-    // console.log("Custom element removed from page.");
+    console.log("Custom element removed from page.", this.nodeName);
   }
 
   adoptedCallback() {
-    // console.log("Custom element moved to new page.");
+    console.log("Custom element moved to new page.", this.nodeName);
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    console.log('Custom square element attributes changed.', this.nodeName);
   }
 }

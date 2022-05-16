@@ -12,7 +12,13 @@ class TodoApp extends Chanters {
 
   addTodo(event) {
     if (event.keyCode === 13) {
-      this.todos.push({ name: this.todoName, completed: false, edit: false });
+      this.todos.push({
+        name: this.todoName,
+        completed: false,
+        edit: false,
+        show: true,
+      });
+
       this.todoName = "";
       this.showFooter = "show";
     }
@@ -44,8 +50,25 @@ class TodoApp extends Chanters {
   }
 
   setActiveTab(activeTab) {
-    console.log(activeTab);
+    switch (activeTab) {
+      case "All":
+        this.todos.forEach((item) => {
+          item.show = "show";
+        });
+        break;
+      case "Active":
+        this.todos.forEach((item) => {
+          item.show = !item.completed ? "show" : "hide";
+        });
+        break;
+      case "Completed":
+        this.todos.forEach((item) => {
+          item.show = item.completed ? "show" : "hide";
+        });
+        break;
+    }
   }
+
 
   static get template() {
     return html`
@@ -68,7 +91,7 @@ class TodoApp extends Chanters {
         </div>
         <ul class="todo-list">
           <template repeat items="todos" key="todo">
-            <li>
+            <li class="{{todo.show}}">
               <input
                 type="checkbox"
                 checked="{{todo.completed}}"

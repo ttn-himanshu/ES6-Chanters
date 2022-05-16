@@ -24,6 +24,10 @@ class TabsSelector extends Chanters {
 
   handleClick(event, item) {
     this.props.setactivetab(item.label);
+    this.tabs.forEach((tab) => {
+      tab.active = "";
+    });
+    item.active = "active";
   }
 
   static get template() {

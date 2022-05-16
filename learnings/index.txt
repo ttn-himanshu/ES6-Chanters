@@ -6,6 +6,11 @@
     --https://github.com/mdn/web-components-examples/blob/master/life-cycle-callbacks/main.js
     --https://salesforcediaries.com/2019/12/13/connectedcallback-in-lightning-web-component/#:~:text=connectedCallback()%20in%20Lightning%20Web%20Component%20is%20part%20of%20the,is%20inserted%20into%20the%20DOM.
 
+Extensions for creating custom built-in elements
+The following extensions are defined:
+
+The is global HTML attribute: Allows you to specify that a standard HTML element should behave like a registered custom built-in element.
+The "is" option of the Document.createElement() method: Allows you to create an instance of a standard HTML element that behaves like a given registered custom built-in element.
 
 -polymer todo app
     -- https://todomvc.com/examples/polymer/index.html#/

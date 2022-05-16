@@ -19,7 +19,7 @@ export default class WebComponent {
     walkNodes(customElement.shadowRoot, (node) => {
       /**
        * Get all the binding in a node
-       * @textBinding @attributeBinding - like @events, @id(ref)
+       * like @events, @id(ref), @repeat, @if, 
        */
       const nodeObject = new Getters(node, customElement, proto);
 
@@ -58,7 +58,7 @@ export default class WebComponent {
   getProps = (customElement, value) => {
     const parentComponent = customElement.getRootNode().host;
     if (parentComponent && parentComponent[value]) {
-      return parentComponent[value];
+      return parentComponent[value].bind(parentComponent);
     } else {
       return value;
     }
