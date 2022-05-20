@@ -8,12 +8,12 @@ class TodoApp extends Chanters {
       todos: [],
       showFooter: "hide",
       activeCount: 0,
-      label: "",
+      label: ""
     };
   }
 
-  setActiveLabel() {
-    this.label = this.todos.length > 1 ? "items" : "item";
+  setActiveLabel () {
+    this.label = this.todos.length > 1 ? "items":"item"
   }
 
   addTodo(event) {
@@ -100,7 +100,7 @@ class TodoApp extends Chanters {
         </div>
         <ul class="todo-list">
           <template repeat items="todos" key="todo">
-            <li class="{{todo.show}}">
+            <li class="{{todo.completed}}">
               <input
                 type="checkbox"
                 checked="{{todo.completed}}"

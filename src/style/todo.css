@@ -49,6 +49,10 @@
     align-items: center;
 }
 
+.todo-list li.true{
+    text-decoration: line-through;
+}
+
 .todo-list li .toggle {
     height: 20px;
     width: 30px;
