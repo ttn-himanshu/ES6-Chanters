@@ -22,7 +22,7 @@ class TodoApp extends Chanters {
         name: this.todoName,
         completed: false,
         edit: false,
-        show: true,
+        show: "show",
       });
 
       this.todoName = "";
@@ -100,7 +100,7 @@ class TodoApp extends Chanters {
         </div>
         <ul class="todo-list">
           <template repeat items="todos" key="todo">
-            <li>
+            <li class={{todo.show}}>
               <input
                 type="checkbox"
                 checked="{{todo.completed}}"
