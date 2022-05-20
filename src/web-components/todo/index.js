@@ -24,10 +24,6 @@ class TodoApp extends Chanters {
     }
   }
 
-  completeTask(event, todo) {
-    console.log(todo);
-  }
-
   removeTodo(event, index) {
     this.todos.splice(index, 1);
     if (!this.todos.length) {
@@ -126,5 +122,4 @@ class TodoApp extends Chanters {
   }
 }
 
-// on-click="{{completeTask(todo)}}"
 customElements.define("todo-app", TodoApp);
