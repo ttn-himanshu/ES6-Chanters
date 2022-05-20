@@ -8,7 +8,7 @@ class TabsSelector extends Chanters {
       tabs: [
         {
           label: "All",
-          active: "active",
+          active: "active-item",
         },
         {
           label: "Active",
@@ -27,19 +27,20 @@ class TabsSelector extends Chanters {
     this.tabs.forEach((tab) => {
       tab.active = "";
     });
-    item.active = "active";
+    item.active = "active-item";
   }
 
   static get template() {
     return html`
       <style>
         @import "src/style/todo.css";
+        @import "src/style/chanters.css";
       </style>
       <div class="footer">
         <slot name="todo-counter"></slot>
         <ul>
           <template repeat items="tabs">
-            <li class="{{item.active}}" on-click="{{handleClick(item)}}">
+            <li class="{{item.active}} cursor-pointer" on-click="{{handleClick(item)}}">
               {{item.label}}
             </li>
           </template>
