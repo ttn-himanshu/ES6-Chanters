@@ -7,7 +7,13 @@ class TodoApp extends Chanters {
       todoName: "",
       todos: [],
       showFooter: "hide",
+      activeCount: 0,
+      label: "",
     };
+  }
+
+  setActiveLabel() {
+    this.label = this.todos.length > 1 ? "items" : "item";
   }
 
   addTodo(event) {
@@ -21,11 +27,15 @@ class TodoApp extends Chanters {
 
       this.todoName = "";
       this.showFooter = "show";
+      this.activeCount++;
+      this.setActiveLabel();
     }
   }
 
   removeTodo(event, index) {
     this.todos.splice(index, 1);
+    this.activeCount--;
+    this.setActiveLabel();
     if (!this.todos.length) {
       this.showFooter = "hide";
     }
@@ -65,6 +75,9 @@ class TodoApp extends Chanters {
     }
   }
 
+  toggleActiveCount(event, item) {
+    item.completed ? this.activeCount-- : this.activeCount++;
+  }
 
   static get template() {
     return html`
@@ -92,6 +105,7 @@ class TodoApp extends Chanters {
                 type="checkbox"
                 checked="{{todo.completed}}"
                 class="toggle"
+                on-change="{{toggleActiveCount(todo)}}"
               />
               <template if="!{{todo.edit}}">
                 <label on-dblclick="{{editTodo(todo)}}" class="list-item-todo"
@@ -115,7 +129,7 @@ class TodoApp extends Chanters {
           </template>
         </ul>
         <tabs-selector class="{{showFooter}}" data-setactivetab="setActiveTab">
-          <label slot="todo-counter">{{todos.length}} item left</label>
+          <label slot="todo-counter">{{activeCount}} {{label}} left</label>
         </tabs-selector>
       </div>
     `;
