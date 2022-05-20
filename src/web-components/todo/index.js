@@ -100,7 +100,7 @@ class TodoApp extends Chanters {
         </div>
         <ul class="todo-list">
           <template repeat items="todos" key="todo">
-            <li class="{{todo.completed}}">
+            <li>
               <input
                 type="checkbox"
                 checked="{{todo.completed}}"
@@ -108,7 +108,7 @@ class TodoApp extends Chanters {
                 on-change="{{toggleActiveCount(todo)}}"
               />
               <template if="!{{todo.edit}}">
-                <label on-dblclick="{{editTodo(todo)}}" class="list-item-todo"
+                <label on-dblclick="{{editTodo(todo)}}" class="list-item-todo {{todo.completed}}"
                   >{{todo.name}}</label
                 >
               </template>

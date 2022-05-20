@@ -49,9 +49,6 @@
     align-items: center;
 }
 
-.todo-list li.true{
-    text-decoration: line-through;
-}
 
 .todo-list li .toggle {
     height: 20px;
@@ -64,6 +61,12 @@
     padding-left: 10px;
     line-height: 1.4em;
 }
+
+
+.todo-list li .list-item-todo.true{
+    text-decoration: line-through;
+}
+
 
 .todo-list li .list-item-input {
     width: 100%;
