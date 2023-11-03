@@ -88,8 +88,18 @@ export default class Setters {
       values,
       nodeName
     );
+
+    if(bindingObject.value !=="parsed value of condition") {
+      bindingObject.oldValue = bindingObject.value;
+    }
+
     bindingObject.value = executeCondition(parsedCondition);
     node.setAttribute("if", bindingObject.value);
+
+   
+    if (!!bindingObject.value === !!bindingObject.oldValue) {
+      return;
+    }
 
     /**
      * creating if DOM

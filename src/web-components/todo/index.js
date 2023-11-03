@@ -118,9 +118,11 @@ class TodoApp extends Chanters {
             </li>
           </template>
         </ul>
-        <tabs-selector class="{{showFooter}}" data-setactivetab="setActiveTab">
+        <template if="{{todos.length}}">
+        <tabs-selector data-setactivetab="setActiveTab">
           <label slot="todo-counter">{{todos.length}} item left</label>
         </tabs-selector>
+        </template>
       </div>
     `;
   }
