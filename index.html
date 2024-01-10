@@ -5,15 +5,8 @@
     <meta charset="utf-8" />
     <title>Homepage</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- <script type="module" src="src/web-components/header/index.js"></script>
-    <script type="module" src="src/web-components/background/index.js"></script>
-    <script type="module" src="src/web-components/content/index.js"></script>
-    <script type="module" src="src/web-components/login/index.js"></script>
-    <script type="module" src="src/web-components/contextMenu/index.js"></script> -->
-    <script type="module" src="src/web-components/todo/index.js"></script>
-    <script type="module" src="src/web-components/todo/tabs.js"></script>
-
-    <!-- <script type="module" src="src/web-components/parsing-expressions/index.js"></script> -->
+    <script type="module" src="src/libV2/web-components/table-component/index.js"></script>
+    
 
 <style>
     .todo-wrapper{
@@ -24,14 +17,7 @@
 </head>
 
 <body style="background: #f5f5f5;">
-    <chanters-header data-number="1">
-    </chanters-header>
-    <chanters-background class="container"></chanters-background>
-    <chanters-content chanters-contextmenu="openmenu" data-template="chanters-login.html">
-    </chanters-content>
-    <todo-app>
-    </todo-app>
-    <parsing-expressions></parsing-expressions>
+    <table-component></table-component>
 </body>
 
 </html>
